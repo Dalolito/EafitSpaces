@@ -1,0 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+body{
+    background-color: black;
+}
+
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2%; 
+    padding: 5%;
+    
+}
+
+.grid-item {
+    border: 6px solid #2874A6; 
+    padding: 3%;
+    text-align: center;
+    border-radius: 2%;
+    color: #7B7D7D;
+    background-color: #D7DBDD ;
+}
+
+.images {
+
+    width: 100%;
+    height: 70%;
+}
+
+
+.btn_reserve {
+    background-color: #2874A6; /* Color de fondo verde */
+    border: none; /* Sin bordes */
+    color: white; /* Texto blanco */
+    padding: 3%; /* Espaciado interno: 15px arriba y abajo, 32px a los lados */
+    text-align: center; /* Centrado del texto */
+    text-decoration: none; /* Sin subrayado */
+    display: inline-block; /* Mostrar como un elemento en línea con la capacidad de establecer dimensiones */
+    font-size: 120%; /* Tamaño de fuente */
+    margin: 3%; /* Margen: 4px arriba y abajo, 2px a los lados */
+    cursor: pointer; /* Cursor de puntero al pasar el mouse */
+    border-radius: 10%; /* Bordes redondeados */
+    transition: background-color 0.3s; /* Transición suave del color de fondo */
+}
+
+.btn_reserve:hover {
+    background-color: #3498DB; /* Color de fondo al pasar el mouse */
+}
+
+.bbtn_reserve:active {
+    background-color: #85C1E9; /* Color de fondo al hacer clic */
+    box-shadow: 0 5px #666; /* Sombra cuando se hace clic */
+    transform: translateY(4px); /* Efecto de hundimiento cuando se hace clic */
+}
+
+.popup_form {
+    background-color: rgba(0, 0, 139, 0.92);;
+    color: white;
+    display: none; /* Oculto por defecto */
+    position: absolute;
+    z-index: 1;
+    left: 10%;
+    top: 10%;
+    width: 80%;
+    height: 80%;
+    overflow: auto;
+ /* Fondo oscuro semitransparente */
+}
+.form_font {
+
+    width: 100%;
+    height: 100%;
+    opacity: 0.35;
+}
+
+.title_form {
+    position: absolute;
+    left: 10%;
+    top: 10%;
+    font-size: 400%;
+    font-family: "Lato", sans-serif;
+    
+}
+.date_title {
+    position: absolute;
+    left: 10%;
+    top: 30%;
+    font-size: 250%;
+    font-family: "Lato", sans-serif;
+    
+}
+.date_input {
+    width: 38%;
+    position: absolute;
+    left: 10%;
+    top: 37%;
+    font-size: 250%;
+    font-family: "Lato", sans-serif;
+    cursor: pointer;
+    
+}
+.start_time_title{
+    position: absolute;
+    left: 10%;
+    top: 46%;
+    font-size: 250%;
+    font-family: "Lato", sans-serif;
+    
+}
+.start_time_input {
+    width: 38%;
+    position: absolute;
+    left: 10%;
+    top: 53%;
+    font-size: 250%;
+    font-family: "Lato", sans-serif;
+    cursor: pointer;
+    
+}
+.end_time_title{
+    position: absolute;
+    left: 10%;
+    top: 62%;
+    font-size: 250%;
+    font-family: "Lato", sans-serif;
+    
+}
+.end_time_input {
+    width: 38%;
+    position: absolute;
+    left: 10%;
+    top: 69%;
+    font-size: 250%;
+    font-family: "Lato", sans-serif;
+    cursor: pointer;
+    
+}
+.button_send {
+    position: absolute;
+    left: 40%;
+    top: 85%;
+    background-color: rgba(0, 0, 139, 0.92); 
+    color: white; 
+    text-align: center; 
+    font-size: 150%;  
+    cursor: pointer; 
+    border-radius: 10%; 
+    transition: background-color 0.3s; 
+    width: 10%;
+    height: 7%;
+}
+.button_close {
+    position: absolute;
+    left: 55%;
+    top: 85%;
+    background-color: rgba(0, 0, 139, 0.92); 
+    color: white; 
+    text-align: center; 
+    font-size: 150%;  
+    cursor: pointer; 
+    border-radius: 10%; 
+    transition: background-color 0.3s; 
+    width: 10%;
+    height: 7%;
+}
+.image_resrvation {
+    position: absolute;
+    top: 30%;
+    left: 60%;
+    width: 40%;
+    height: 40%;
+}

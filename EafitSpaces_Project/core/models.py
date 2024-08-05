@@ -18,8 +18,10 @@ class Space(models.Model):
     capacity = models.IntegerField()
     available_resources = models.CharField(max_length=255)
     building_number = models.IntegerField()
-    ubication = models.CharField(max_length=255)
+    room_number = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='core/images/')
     type = models.CharField(max_length=50)
+
 
 # Reservation
 
@@ -30,7 +32,7 @@ class Reservation(models.Model):
     reservation_date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
-    state = models.CharField(max_length=50) # models.BooleanField(default=False) en el caso que lo pongamos como un checkbox
+   
 
 # Resource
 
