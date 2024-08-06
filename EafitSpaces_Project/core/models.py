@@ -12,7 +12,6 @@ class User(models.Model):
     role = models.CharField(max_length=50)
 
 # Space 
-
 class Space(models.Model):
     space_id = models.AutoField(primary_key=True)
     capacity = models.IntegerField()
@@ -21,10 +20,10 @@ class Space(models.Model):
     room_number = models.CharField(max_length=255)
     image = models.ImageField(upload_to='core/images/')
     type = models.CharField(max_length=50)
+    available = models.BooleanField(default=True)
 
 
 # Reservation
-
 class Reservation(models.Model):
     reservation_id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -32,12 +31,9 @@ class Reservation(models.Model):
     reservation_date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
-   
 
 # Resource
-
 class Resource(models.Model):
     resource_id = models.AutoField(primary_key=True)
     type = models.CharField(max_length=50)
     availability = models.BooleanField()
-     

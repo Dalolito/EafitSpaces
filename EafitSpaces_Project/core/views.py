@@ -9,6 +9,7 @@ def home(request):
     reserve_date = request.GET.get('date_reserve')
     reserve_start_time = request.GET.get('start_time')
     reserve_end_time = request.GET.get('end_time')
+    
     if(reserve_confirmation_id):
         user = User.objects.get(email="dein4267@gmail.com")
         space_id = Space.objects.get(space_id =reserve_confirmation_id )
