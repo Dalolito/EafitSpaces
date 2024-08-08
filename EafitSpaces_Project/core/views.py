@@ -67,6 +67,11 @@ def home(request):
         spaces = Space.objects.all()
         return render(request, 'home.html', {'spaces': spaces})
 
+def index(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+    else:
+        return redirect('register')
 
 """def home(request):
     reserve_peticion = request.GET.get('space_id')
