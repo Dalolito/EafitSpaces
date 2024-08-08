@@ -4,7 +4,7 @@ from .models import Space
 from .models import Reservation
 from .models import User
 from django.contrib.auth.hashers import make_password, check_password
-from django.contrib.auth import login as auth_login, logout as auth_logout
+from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 from django.contrib.auth.decorators import login_required
 
 
@@ -28,9 +28,10 @@ def login(request):
             password = form.cleaned_data['password']
             try:
                 user = User.objects.get(email=email)
+                #incoming_user = authenticate(request, email=email, password=password)
                 if check_password(password, user.password):
                     # Log in the user
-                    auth_login(request, user)
+                    #auth_login(request, incoming_user)
                     spaces = Space.objects.all()
                     return render(request, 'home.html', {'spaces': spaces})
                 else:
