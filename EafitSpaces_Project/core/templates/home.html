@@ -3,7 +3,7 @@
 <head>
     <title>Salones Disponibles</title>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'home_style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'home_style2.css' %}">
     <style>
         /* Asegúrate de que el estilo por defecto sea ocultar el popup_form */
         .popup_form {
@@ -12,24 +12,34 @@
         .image_confirmation {
             display: none;
         }
+
     </style>
 </head>
 <body>
+    <!-- barra superior de la pagina -->
+    <div class  = "top_bar">
+        <h2 class = "username_label">{{user.username|upper }}</h2>
+        <img  src="{% static 'user_image.png' %}" class="user_image" alt="Imagen de cusuario">
+
+    </div>
+    <!-- tablas que muestran los espacios Disponibles -->
     <div class="grid-container">
         {% for space in spaces %}
-            <form action="">
-                <div class="grid-item">
-                    <img src="{{ space.image.url }}" class="images" alt="Imagen del espacio">
-                    <input type="hidden" name="space_id" value="{{ space.space_id }}">
-                    <br>
-                    <h1>{{ space.type }}</h1>
-                    <h2>{{ space.building_number }}-{{ space.room_number }}</h2>
-                    <button type = "submit" class="btn_reserve" onclick="openForm()">Reserve</button>
-                </div>
-            </form>
+            {%if space.available == True%}
+                <form action="">
+                    <div class="grid-item">
+                        <img src="{{ space.image.url }}" class="images" alt="Imagen del espacio">
+                        <input type="hidden" name="space_id" value="{{ space.space_id }}">
+                        <br>
+                        <h1>{{ space.type }}</h1>
+                        <h2>{{ space.building_number }}-{{ space.room_number }}</h2>
+                        <button type = "submit" class="btn_reserve" onclick="openForm()">Reserve</button>
+                    </div>
+                </form>
+            {% endif %}
         {% endfor %}
     </div>
-
+    <!-- formulario emergente cuando se hace click en reserve -->
     <div class="popup_form" id="popup_form">
         <img src="{% static 'form_font.jpeg' %}" class="form_font">
         <form id="reservation_form" action="">
@@ -45,6 +55,8 @@
             
         </form>
             <button type="button" class="button_close" onclick="closeForm()">Cerrar</button>
+        
+        <!-- imagen del salon que se desea reservar -->
     
         <img src="{{ peticion_data.image.url }}" class="image_reservation" alt="Imagen del espacio">
         <div class="information">Aqui va la informacion de el salon..
@@ -55,6 +67,7 @@
             <br>
             -
         </div>
+        <!-- imagen de confirmacion de reserva -->
         <img id="image_confirmation" src="{% static 'image_confirmation.png' %}" class="image_confirmation" alt="Imagen de confirmacion">
     </div>
 
@@ -62,7 +75,9 @@
         // Función para abrir el formulario y guardar el estado en localStorage
         function openForm() {
             document.getElementById("popup_form").style.display = "block";
+            document.getElementById("image_confirmation").style.display = "none";
             localStorage.setItem('popup_form_visible', 'true');
+            localStorage.setItem('image_confirmation_visible', 'false');
         }
         
         // Función para cerrar el formulario y guardar el estado en localStorage
@@ -70,6 +85,7 @@
             document.getElementById("popup_form").style.display = "none";
             document.getElementById("image_confirmation").style.display = "none";
             localStorage.setItem('popup_form_visible', 'false');
+
         }
 
         // Función para ajustar el estado del formulario al cargar la página
@@ -81,16 +97,32 @@
             } else {
                 formulario.style.display = 'none';
             }
+
+            var estado = localStorage.getItem('image_confirmation_visible');
+            var formulario = document.getElementById('reservation_form');
+            var confirmation = document.getElementById('image_confirmation');
+            if (estado == 'true') {
+                formulario.style.display = 'none';
+                confirmation.style.display = 'block';
+            } else {
+                formulario.style.display = 'block';
+                confirmation.style.display = 'none';
+            }
         }
 
         // Función para enviar el formulario y mostrar la imagen de confirmación
         function submitForm() {
             document.getElementById("reservation_form").style.display = "none";
             document.getElementById("image_confirmation").style.display = "block";
+            localStorage.setItem('image_confirmation_visible', 'true');
         }
+
+
 
         // Aplicar el estado guardado al cargar la página
         window.onload = ajustarEstadoFormulario;
+
+
     </script>
 </body>
 </html>
