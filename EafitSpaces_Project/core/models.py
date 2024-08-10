@@ -36,6 +36,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
+#Space Type
+class SpaceType(models.Model):
+    space_type_id = models.AutoField(primary_key=True)
+    type = models.CharField(max_length=255)
+
 # Space
 class Space(models.Model):
     space_id = models.AutoField(primary_key=True)
@@ -44,7 +49,7 @@ class Space(models.Model):
     building_number = models.IntegerField()
     room_number = models.CharField(max_length=255)
     image = models.ImageField(upload_to='core/images/')
-    type = models.CharField(max_length=50)
+    type = models.ForeignKey(SpaceType, on_delete=models.CASCADE)
     available = models.BooleanField(default=True)
 
 # Reservation
