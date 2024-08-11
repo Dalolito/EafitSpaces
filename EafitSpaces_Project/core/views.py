@@ -1,11 +1,9 @@
 from django.shortcuts import render, redirect
-from .models import Space
-from .models import Reservation
+from .models import Space, Reservation, CustomUser, SpaceType
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegistrationForm, UserLoginForm
-from .models import CustomUser
 
 def register(request):
     if request.user.is_authenticated:
@@ -52,6 +50,9 @@ def home(request):
     reserve_date = request.GET.get('date_reserve')
     reserve_start_time = request.GET.get('start_time')
     reserve_end_time = request.GET.get('end_time')
+    selected_type = request.GET.get('space_type')
+    
+    space_types = SpaceType.objects.all()
     
     if reserve_confirmation_id:
         user_id = request.user.user_id
@@ -61,14 +62,18 @@ def home(request):
         Reservation.objects.create(user=user, space=space_id, reservation_date=reserve_date, start_time=reserve_start_time, end_time=reserve_end_time)
         Space.objects.filter(space_id=reserve_confirmation_id).update(available=False)
         spaces = Space.objects.all()
-        return render(request, 'home.html', {'spaces': spaces, 'space_id': reserve_confirmation_id,'peticion_data':peticion_data})
+        return render(request, 'home.html', {'spaces': spaces, 'space_id': reserve_confirmation_id,'peticion_data':peticion_data, 'space_types': space_types})
     elif reserve_peticion:
         peticion_data = Space.objects.get(space_id=reserve_peticion)
         spaces = Space.objects.all()
-        return render(request, 'home.html', {'spaces': spaces, 'space_id': reserve_peticion, 'peticion_data': peticion_data})
+        return render(request, 'home.html', {'spaces': spaces, 'space_id': reserve_peticion, 'peticion_data': peticion_data, 'space_types': space_types})
     else:
-        spaces = Space.objects.all()
-        return render(request, 'home.html', {'spaces': spaces})
+        if selected_type:
+            spaces = Space.objects.filter(type__type=selected_type)
+        else:
+            spaces = Space.objects.all()
+            
+        return render(request, 'home.html', {'spaces': spaces, 'space_types': space_types})
 
 def index(request):
     if request.user.is_authenticated:

@@ -1,129 +1,149 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Salones Disponibles</title>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'home_style2.css' %}">
-    <style>
-        /* Asegúrate de que el estilo por defecto sea ocultar el popup_form */
-        .popup_form {
-            display: none;
-        }
-        .image_confirmation {
-            display: none;
-        }
+    <head>
+        <title>Eafit Spaces</title>
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'home_style2.css' %}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <style>
+            /* Asegúrate de que el estilo por defecto sea ocultar el popup_form */
+            .popup_form {
+                display: none;
+            }
+            .image_confirmation {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="overlay" id="overlay"></div>
 
-    </style>
-</head>
-<body>
-    <!-- barra superior de la pagina -->
-    <div class  = "top_bar">
-        <h2 class = "username_label">{{user.username|upper }}</h2>
-        <img  src="{% static 'user_image.png' %}" class="user_image" alt="Imagen de cusuario">
-
-    </div>
-    <!-- tablas que muestran los espacios Disponibles -->
-    <div class="grid-container">
-        {% for space in spaces %}
-            {%if space.available == True%}
-                <form action="">
-                    <div class="grid-item">
-                        <img src="{{ space.image.url }}" class="images" alt="Imagen del espacio">
-                        <input type="hidden" name="space_id" value="{{ space.space_id }}">
-                        <br>
-                        <h1>{{ space.type }}</h1>
-                        <h2>{{ space.building_number }}-{{ space.room_number }}</h2>
-                        <button type = "submit" class="btn_reserve" onclick="openForm()">Reserve</button>
-                    </div>
-                </form>
-            {% endif %}
-        {% endfor %}
-    </div>
-    <!-- formulario emergente cuando se hace click en reserve -->
-    <div class="popup_form" id="popup_form">
-        <img src="{% static 'form_font.jpeg' %}" class="form_font">
-        <form id="reservation_form" action="">
-            <input type="hidden" name="space_id_reservation" value="{{ peticion_data.space_id }}">
-            <label for="title_form" class="title_form">Realizar reservación</label>
-            <label for="date" class="date_title">Fecha</label>
-            <input type="date" id="date_reserve" name="date_reserve" required class="date_input">
-            <label for="start_time" class="start_time_title">Hora de inicio</label>
-            <input type="time" id="start_time" name="start_time" required class="start_time_input">
-            <label for="end_time" class="end_time_title">Hora de fin</label>
-            <input type="time" id="end_time" name="end_time" required class="end_time_input">
-            <button type = "submit" class="button_send" onclick="submitForm()">Enviar</button>
-            
-        </form>
-            <button type="button" class="button_close" onclick="closeForm()">Cerrar</button>
-        
-        <!-- imagen del salon que se desea reservar -->
-    
-        <img src="{{ peticion_data.image.url }}" class="image_reservation" alt="Imagen del espacio">
-        <div class="information">Aqui va la informacion de el salon..
-            <br>
-            -
-            <br>
-            -
-            <br>
-            -
+        <div class="top_bar">
+                <h2 class = "top_bar_title">Eafit Spaces</h2>
+                <img  src="{% static 'user_image.png' %}" class="user_image" alt="Imagen de usuario"/>
+                <h2 class = "username_label">{{ user.username|upper }}</h2>
         </div>
-        <!-- imagen de confirmacion de reserva -->
-        <img id="image_confirmation" src="{% static 'image_confirmation.png' %}" class="image_confirmation" alt="Imagen de confirmacion">
-    </div>
 
-    <script>
-        // Función para abrir el formulario y guardar el estado en localStorage
-        function openForm() {
-            document.getElementById("popup_form").style.display = "block";
-            document.getElementById("image_confirmation").style.display = "none";
-            localStorage.setItem('popup_form_visible', 'true');
-            localStorage.setItem('image_confirmation_visible', 'false');
-        }
+        <div class="grid-head">
+            <div class="grid-title">
+                <p><b>Available Spaces:</b></p>
+            </div>
+
+            <div class="dropdown">
+                <button class="dropbtn">Filter by:</button>
+                <div class="dropdown-content">
+                    <a href="/">All</a>
+                    {% for space_type in space_types %}
+                        <a href="?space_type={{ space_type.type }}">{{ space_type.type }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- tablas que muestran los espacios Disponibles -->
+        <div class="grid-container">
+            {% for space in spaces %}
+                {%if space.available == True%}
+                    <form action="">
+                        <div class="grid-item">
+                            <img src="{{ space.image.url }}" class="images" alt="Imagen del espacio">
+                            <input type="hidden" name="space_id" value="{{ space.space_id }}">
+                            <br>
+                            <h1 style="font-size: 24px">{{ space.type.type }}</h1>
+                            <h2 style="font-size: 20px">{{ space.building_number }}-{{ space.room_number }}</h2>
+                            <h2 style="font-size: 18px"><b>Capacity: </b>{{space.capacity}}</h2>
+                            <br>
+                            <button type = "submit" class="btn btn-primary" onclick="openForm()">Reserve</button>
+                        </div>
+                    </form>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <!-- formulario emergente cuando se hace click en reserve -->
+        <div class="popup_form" id="popup_form">
+            <div>
+                <form id="reservation_form" action="">
+                    <input type="hidden" name="space_id_reservation" value="{{ peticion_data.space_id }}">
+                    <label for="title_form" class="title_form">Make Reservation</label>
+                    
+                    <label for="date" class="date_title">Date</label>
+                    <input type="date" id="date_reserve" name="date_reserve" required class="date_input">
+
+                    <label for="start_time" class="start_time_title">Start time</label>
+                    <input type="time" id="start_time" name="start_time" required class="start_time_input">
+
+                    <label for="end_time" class="end_time_title">End time</label>
+                    <input type="time" id="end_time" name="end_time" required class="end_time_input">
+                    
+                    <button type = "submit" class="button_send" onclick="submitForm()">Accept</button>
+                </form>
+                    <button type="button" class="button_close" onclick="closeForm()">Back</button>
+            <div>
+            
+            <!-- imagen del salon que se desea reservar -->
         
-        // Función para cerrar el formulario y guardar el estado en localStorage
-        function closeForm() {
-            document.getElementById("popup_form").style.display = "none";
-            document.getElementById("image_confirmation").style.display = "none";
-            localStorage.setItem('popup_form_visible', 'false');
+            <img src="{{ peticion_data.image.url }}" class="image_reservation" alt="Imagen del espacio">
+            <div class="information">
+                {{ peticion_data.available_resources }}
+            </div>
+            <!-- imagen de confirmacion de reserva -->
+            <img id="image_confirmation" src="{% static 'image_confirmation.png' %}" class="image_confirmation" alt="Imagen de confirmacion">
+        </div>
 
-        }
-
-        // Función para ajustar el estado del formulario al cargar la página
-        function ajustarEstadoFormulario() {
-            var estado = localStorage.getItem('popup_form_visible');
-            var formulario = document.getElementById('popup_form');
-            if (estado === 'true') {
-                formulario.style.display = 'block';
-            } else {
-                formulario.style.display = 'none';
+        <script>
+            // Función para abrir el formulario y guardar el estado en localStorage
+            function openForm() {
+                document.getElementById("popup_form").style.display = "block";
+                document.getElementById("overlay").style.display = "block";
+                document.getElementById("image_confirmation").style.display = "none";
+                localStorage.setItem('popup_form_visible', 'true');
+                localStorage.setItem('image_confirmation_visible', 'false');
+            }
+            
+            // Función para cerrar el formulario y guardar el estado en localStorage
+            function closeForm() {
+                document.getElementById("popup_form").style.display = "none";
+                document.getElementById("overlay").style.display = "none";
+                document.getElementById("image_confirmation").style.display = "none";
+                localStorage.setItem('popup_form_visible', 'false');
             }
 
-            var estado = localStorage.getItem('image_confirmation_visible');
-            var formulario = document.getElementById('reservation_form');
-            var confirmation = document.getElementById('image_confirmation');
-            if (estado == 'true') {
-                formulario.style.display = 'none';
-                confirmation.style.display = 'block';
-            } else {
-                formulario.style.display = 'block';
-                confirmation.style.display = 'none';
+            // Función para ajustar el estado del formulario al cargar la página
+            function ajustarEstadoFormulario() {
+                var estado = localStorage.getItem('popup_form_visible');
+                var formulario = document.getElementById('popup_form');
+                var overlay = document.getElementById('overlay');
+                if (estado === 'true') {
+                    formulario.style.display = 'block';
+                    overlay.style.display = 'block';
+                } else {
+                    formulario.style.display = 'none';
+                    overlay.style.display = 'none';
+                }
+
+                var estado = localStorage.getItem('image_confirmation_visible');
+                var formulario = document.getElementById('reservation_form');
+                var confirmation = document.getElementById('image_confirmation');
+                if (estado == 'true') {
+                    formulario.style.display = 'none';
+                    confirmation.style.display = 'block';
+                } else {
+                    formulario.style.display = 'block';
+                    confirmation.style.display = 'none';
+                }
             }
-        }
 
-        // Función para enviar el formulario y mostrar la imagen de confirmación
-        function submitForm() {
-            document.getElementById("reservation_form").style.display = "none";
-            document.getElementById("image_confirmation").style.display = "block";
-            localStorage.setItem('image_confirmation_visible', 'true');
-        }
+            // Función para enviar el formulario y mostrar la imagen de confirmación
+            function submitForm() {
+                document.getElementById("reservation_form").style.display = "none";
+                document.getElementById("image_confirmation").style.display = "block";
+                localStorage.setItem('image_confirmation_visible', 'true');
+            }
 
+            // Aplicar el estado guardado al cargar la página
+            window.onload = ajustarEstadoFormulario;
 
-
-        // Aplicar el estado guardado al cargar la página
-        window.onload = ajustarEstadoFormulario;
-
-
-    </script>
-</body>
+        </script>
+    </body>
 </html>
 <!--<a href="{% url 'logout' %}">Cerrar Sesión</a>
