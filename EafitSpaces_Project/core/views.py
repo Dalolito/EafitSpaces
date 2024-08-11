@@ -50,6 +50,7 @@ def home(request):
     reserve_date = request.GET.get('date_reserve')
     reserve_start_time = request.GET.get('start_time')
     reserve_end_time = request.GET.get('end_time')
+    selected_type = request.GET.get('space_type')
     
     space_types = SpaceType.objects.all()
     
@@ -67,7 +68,11 @@ def home(request):
         spaces = Space.objects.all()
         return render(request, 'home.html', {'spaces': spaces, 'space_id': reserve_peticion, 'peticion_data': peticion_data, 'space_types': space_types})
     else:
-        spaces = Space.objects.all()
+        if selected_type:
+            spaces = Space.objects.filter(type__type=selected_type)
+        else:
+            spaces = Space.objects.all()
+            
         return render(request, 'home.html', {'spaces': spaces, 'space_types': space_types})
 
 def index(request):

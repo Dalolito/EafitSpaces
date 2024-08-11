@@ -32,8 +32,9 @@
             <div class="dropdown">
                 <button class="dropbtn">Filter by:</button>
                 <div class="dropdown-content">
+                    <a href="/">All</a>
                     {% for space_type in space_types %}
-                        <a href="#">{{ space_type.type }}</a>
+                        <a href="?space_type={{ space_type.type }}">{{ space_type.type }}</a>
                     {% endfor %}
                 </div>
             </div>

@@ -96,6 +96,15 @@ body {
     border-radius: 3px;
 }
 
+.cancel_search_button {
+    margin-right: 10px;
+}
+
+.filter-container {
+    display: flex;
+    align-items: center; /* Alinea verticalmente al centro */
+}
+
 .dropdown {
     position: relative;
     display: inline-block;
