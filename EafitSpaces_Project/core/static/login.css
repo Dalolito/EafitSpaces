@@ -11,11 +11,11 @@ body {
 }
 
 .container {
-    background-color: #007bff; /* Fondo azul para el cuadro */
+    background-color: #147dcd; /* Fondo azul para el cuadro */
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    width: 100%;
+    width: 200%;
     max-width: 400px;
     text-align: center;
 }
@@ -33,7 +33,7 @@ form {
 }
 
 form p {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 input[type="text"], input[type="password"] {
