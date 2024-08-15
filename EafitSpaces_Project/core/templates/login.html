@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Inicio de Sesión</title>
+    <title>LOGIN</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'login.css' %}">
 </head>
 <body>
     <div class="container">
-        <h2>Inicio de Sesión</h2>
+        <h2>LOGIN</h2>
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
-                <label for="username">Usuario</label>
+                <label for="username">User</label>
             </div>
             {{ form.as_p }}
             <div class="form-group">
-                <label for="password" class="contraseña">Contraseña</label>
+                <label for="password" class="contraseña">Password</label>
             </div>
-            <button type="submit">Iniciar Sesión</button>
+            <button type="submit">Login</button>
         </form>
-        <p>¿No tienes una cuenta? <a href="{% url 'register' %}">Regístrate aquí</a></p>
+        <p>¿No tienes una cuenta? <a href="{% url 'register' %}">Register here</a></p>
     </div>
 </body>
 </html>
