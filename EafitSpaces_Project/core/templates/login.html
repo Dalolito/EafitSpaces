@@ -10,7 +10,13 @@
         <h2>Inicio de Sesión</h2>
         <form method="post">
             {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Usuario</label>
+            </div>
             {{ form.as_p }}
+            <div class="form-group">
+                <label for="password" class="contraseña">Contraseña</label>
+            </div>
             <button type="submit">Iniciar Sesión</button>
         </form>
         <p>¿No tienes una cuenta? <a href="{% url 'register' %}">Regístrate aquí</a></p>
