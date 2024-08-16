@@ -1,67 +1,42 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 body {
-    background-color: rgb(240, 240, 240);
-    overflow-x: hidden;
+    background-color: black;
 }
 
-.top_bar{
-    background-color: #020873;
+.top_bar {
+    top: 0%;
+    left: 0%;   
+    position: absolute;
     width: 100%;
-    height: 70px; /* Fija la altura del top bar */
-    display: flex;
-    justify-content: flex-end; /* Centra los elementos horizontalmente */
-    align-items: center; /* Centra los elementos verticalmente */
-    padding: 10px;
-    box-sizing: border-box;
+    height: 15%;
+    background-color:#2874A6 ;
 }
-
-.top_bar_title {
-    color: white;
-    font-size: 160%;
-    font-family: "Montserrat";
-    margin-left: 20px !important; /* Espacio entre la imagen y el texto */
-    margin-right: 20px !important; 
-    margin: 0;
-    flex: 1;
-}
-
 .username_label{
-    color: white;
-    font-size: 160%;
-    font-family: "Montserrat";
-    margin-left: 20px !important; /* Espacio entre la imagen y el texto */
-    margin-right: 20px !important; 
-    margin: 0;
-}
+    position: relative;
+    top: 11%;
+    left: 90%;
+    font-size: 250%;
+    font-family: "Lato", sans-serif;
 
+}
 .user_image{
-    height: 30px; /* Ajusta el tamaño según tus necesidades */
-    width: 30px;
-    border-radius: 50%; /* Esto hace que la imagen sea redonda */
-    margin-left: 60px;
-}
-
-.grid-title {
-    display: grid;
-    gap: 2%; 
-    font-size: 26px;
-    margin-top: 15px;
+    position: relative;
+    top: -57%;
+    left: 84%;
+    width: 6%;
+    height: 55%;
 }
 
 .grid-container {
+    margin-top: 7%;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2%; 
-    padding-top: 2%;
-    padding-left: 5%;
-    padding-right: 5%;
-    padding-bottom: 5%;
+    padding: 5%;
 }
 
 .grid-item {
-    border: 3px solid #020873; 
+    border: 6px solid #2874A6; 
     padding: 3%;
     text-align: center;
     border-radius: 2%;
@@ -73,69 +48,19 @@ body {
     display: block;
     height: 300px;
     width: 100%;
-    border-radius: 2%;
 }
 
-.grid-head {
-    display: flex; /* Habilita el modelo Flexbox */
-    align-items: center; /* Alinea verticalmente en el centro */
-    justify-content: space-between; /* Espacio entre los elementos */
-    padding: 10px; /* Espacio alrededor del contenedor */
-    padding-left: 5%;
-    padding-right: 5%;
-    padding-top: 2%;
-}
-
-.dropbtn {
-    background-color: #007bff;
+.btn_reserve {
+    background-color: #2874A6;
     color: white;
-    padding: 16px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    border-radius: 3px;
-}
-
-.cancel_search_button {
-    margin-right: 10px;
-}
-
-.filter-container {
-    display: flex;
-    align-items: center; /* Alinea verticalmente al centro */
-}
-
-.dropdown {
-    position: relative;
+    padding: 3%;
+    text-align: center;
     display: inline-block;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-}
-
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-.dropdown-content a:hover {
-    background-color: #f1f1f1
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown:hover .dropbtn {
-    background-color: #929292;
+    font-size: 120%;
+    margin: 3%;
+    cursor: pointer;
+    border-radius: 10%;
+    transition: background-color 0.3s;
 }
 
 .btn_reserve:hover {
@@ -148,30 +73,17 @@ body {
     transform: translateY(4px);
 }
 
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semitransparente */
-    z-index: 1000; /* Asegura que esté detrás del popup_form */
-    display: none; /* Oculto por defecto */
-}
-
-/* Estilos para el formulario popup */
 .popup_form {
-    position: fixed;
-    background-color: rgba(240, 240, 240, 0.92);
+    background-color: rgba(0, 0, 139, 0.92);
     color: white;
     display: none;
-    z-index: 1001; /* Por encima del overlay */
+    position: absolute;
+    z-index: 1;
     left: 10%;
     top: 10%;
     width: 80%;
     height: 80%;
     overflow: auto;
-    border-radius: 5px;
 }
 
 .form_font {
@@ -183,47 +95,44 @@ body {
 .title_form {
     position: absolute;
     left: 10%;
-    top: 8%;
-    font-size: 300%;
-    font-family: "Montserrat";
-    color: #000000;
+    top: 10%;
+    font-size: 400%;
+    font-family: "Lato", sans-serif;
 }
 
 .date_title {
     position: absolute;
     left: 10%;
-    top: 23%;
-    font-size: 210%;
-    font-family: "Montserrat";
-    color: #000000;
+    top: 30%;
+    font-size: 250%;
+    font-family: "Lato", sans-serif;
 }
 
 .date_input {
     width: 38%;
     position: absolute;
     left: 10%;
-    top: 30%;
-    font-size: 180%;
-    font-family: "Montserrat";
+    top: 37%;
+    font-size: 250%;
+    font-family: "Lato", sans-serif;
     cursor: pointer;
 }
 
 .start_time_title {
     position: absolute;
     left: 10%;
-    top: 43%;
-    font-size: 210%;
-    font-family: "Montserrat";
-    color: #000000;
+    top: 46%;
+    font-size: 250%;
+    font-family: "Lato", sans-serif;
 }
 
 .start_time_input {
     width: 38%;
     position: absolute;
     left: 10%;
-    top: 50%;
-    font-size: 180%;
-    font-family: "Montserrat";
+    top: 53%;
+    font-size: 250%;
+    font-family: "Lato", sans-serif;
     cursor: pointer;
 }
 
@@ -231,9 +140,8 @@ body {
     position: absolute;
     left: 10%;
     top: 62%;
-    font-size: 210%;
-    font-family: "Montserrat";
-    color: #000000;
+    font-size: 250%;
+    font-family: "Lato", sans-serif;
 }
 
 .end_time_input {
@@ -241,8 +149,8 @@ body {
     position: absolute;
     left: 10%;
     top: 69%;
-    font-size: 180%;
-    font-family: "Montserrat";
+    font-size: 250%;
+    font-family: "Lato", sans-serif;
     cursor: pointer;
 }
 
@@ -250,32 +158,30 @@ body {
     position: absolute;
     left: 40%;
     top: 85%;
-    background-color: #007bff;
+    background-color: rgba(0, 0, 139, 0.92);
     color: white;
     text-align: center;
-    font-size: 130%;
+    font-size: 150%;
     cursor: pointer;
-    border-radius: 5%;
+    border-radius: 10%;
     transition: background-color 0.3s;
     width: 10%;
     height: 7%;
-    border-color: #007bff;
 }
 
 .button_close {
     position: absolute;
     left: 55%;
     top: 85%;
-    background-color: #007bff;
+    background-color: rgba(0, 0, 139, 0.92);
     color: white;
     text-align: center;
-    font-size: 130%;
+    font-size: 150%;
     cursor: pointer;
-    border-radius: 5%;
+    border-radius: 10%;
     transition: background-color 0.3s;
     width: 10%;
     height: 7%;
-    border-color: #007bff;
 }
 
 .image_reservation {
@@ -284,8 +190,8 @@ body {
     left: 60%;
     width: 36%;
     height: 38%;
-    border: 3px solid #020873;
-    border-radius: 4%;
+    border: 6px solid #2874A6;
+    border-radius: 10%;
 }
 
 .information {
@@ -295,12 +201,11 @@ body {
     width: 36%;
     height: 35%;
     background-color: white;
-    border: 3px solid #020873;
-    border-radius: 4%;
+    border: 6px solid #2874A6;
+    border-radius: 10%;
     color: black;
     text-align: center;
 }
-
 .image_confirmation {
     position: absolute;
     top: 30%;
