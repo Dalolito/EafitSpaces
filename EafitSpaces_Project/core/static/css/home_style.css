@@ -1,13 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
+.sidebar-separator {
+    height: 1px; /* Altura del separador */
+    background-color: #ffffff; /* Color del separador */
+    opacity: 0.5; /* Opcional: Transparencia */
+}
+
 body {
     background-color: rgb(240, 240, 240);
     overflow-x: hidden;
 }
 
 .top_bar{
-    background-color: #020873;
+    background-color: #ffffff;
     width: 100%;
     height: 70px; /* Fija la altura del top bar */
     display: flex;
@@ -18,22 +24,24 @@ body {
 }
 
 .top_bar_title {
-    color: white;
+    color: rgb(0, 0, 0);
     font-size: 160%;
     font-family: "Montserrat";
     margin-left: 20px !important; /* Espacio entre la imagen y el texto */
     margin-right: 20px !important; 
     margin: 0;
     flex: 1;
+    font-weight: 600;
 }
 
 .username_label{
-    color: white;
+    color: rgb(0, 0, 0);
     font-size: 160%;
     font-family: "Montserrat";
     margin-left: 20px !important; /* Espacio entre la imagen y el texto */
     margin-right: 20px !important; 
     margin: 0;
+
 }
 
 .user_image{

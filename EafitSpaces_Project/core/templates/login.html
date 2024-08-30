@@ -4,7 +4,7 @@
     <title>LOGIN</title>
     {% load static %}
 
-    <link rel="stylesheet" type="text/css" href="{% static 'login.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
 </head>
 <body>
     <div class="container">
@@ -20,7 +20,7 @@
             </div>
             <button type="submit">Login</button>
         </form>
-        <p>¿No tienes una cuenta? <a href="{% url 'register' %}">Register here</a></p>
+        <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
     </div>
 </body>
 </html>

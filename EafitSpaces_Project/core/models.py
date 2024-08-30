@@ -38,31 +38,53 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 #Space Type
 class SpaceType(models.Model):
-    space_type_id = models.AutoField(primary_key=True)
-    type = models.CharField(max_length=255)
+    type_id = models.AutoField(primary_key=True)
+    type_name = models.CharField(max_length=255)
 
 # Space
 class Space(models.Model):
     space_id = models.AutoField(primary_key=True)
     capacity = models.IntegerField()
-    available_resources = models.CharField(max_length=255)
     building_number = models.IntegerField()
     room_number = models.CharField(max_length=255)
     image = models.ImageField(upload_to='core/images/')
-    type = models.ForeignKey(SpaceType, on_delete=models.CASCADE)
+    type_id = models.ForeignKey(SpaceType, on_delete=models.CASCADE)
     available = models.BooleanField(default=True)
+    available_resources = models.CharField(max_length=255)
 
 # Reservation
 class Reservation(models.Model):
     reservation_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    space_id = models.ForeignKey(Space, on_delete=models.CASCADE)
     reservation_date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
+    
+    STATUS_CHOICES = [
+        ('Close', 'Close'),
+        ('Available', 'Available'),
+    ]
+    
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Available')
 
 # Resource
 class Resource(models.Model):
     resource_id = models.AutoField(primary_key=True)
     type = models.CharField(max_length=50)
     availability = models.BooleanField()
+
+# Notifications
+class Notifications(models.Model):
+    notification_id = models.AutoField(primary_key=True)
+    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)
+    date_time = models.DateTimeField()
+    message = models.CharField(max_length=300)
+
+# Reports
+class Reports(models.Model):
+    report_id = models.AutoField(primary_key=True)
+    report_pdf = models.FileField()
+    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    report_date = models.DateField()
