@@ -4,33 +4,37 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    overflow-x: hidden;
     margin: 0;
 }
 
 .container {
-    background-color: #00008B;
-    padding: 30px 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 13%;
+    background-color: #020873; /* Fondo azul para el cuadro */
+    padding: 3%;
+    border-radius: 2%;
+    box-shadow: 0 0 3% rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 25%;
     text-align: center;
-    width: 300px;
 }
+
 
 h2 {
     color: white;
-    margin-bottom: 20px;
+    margin-bottom: 4%;
 }
 
 form {
     background-color: white;
-    padding: 20px;
-    border-radius: 10px;
+    padding: 4%;
+    border-radius: 2%;
     text-align: left;
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 4%;
 }
 
 label {
@@ -41,19 +45,19 @@ label {
 
 input[type="text"], input[type="password"], input[type="email"] {
     width: 100%;
-    padding: 8px;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 2.5%;
+    margin: 2% 0;
+    border: 2px solid #ccc;
+    border-radius: 1%;
     box-sizing: border-box;
 }
 
 button[type="submit"] {
     background-color: #007BFF;
     color: white;
-    padding: 10px;
+    padding: 3%;
     border: none;
-    border-radius: 4px;
+    border-radius: 1%;
     cursor: pointer;
     width: 100%;
 }

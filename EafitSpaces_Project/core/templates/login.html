@@ -12,11 +12,13 @@
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
-                <label for="username">User</label>
+                <label for="email">Email:</label>
+                {{ form.email}}
+                <label for="password">Password:</label>
+                {{ form.password }}
             </div>
-            {{ form.as_p }}
             <div class="form-group">
-                <label for="password" class="contraseña">Password</label>
+                
             </div>
             <button type="submit">Login</button>
         </form>

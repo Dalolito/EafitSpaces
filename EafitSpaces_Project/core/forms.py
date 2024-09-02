@@ -10,5 +10,5 @@ class UserRegistrationForm(forms.ModelForm):
 
 
 class UserLoginForm(forms.Form):
-    email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput)
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Enter your email', 'value': ''}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Enter your password', 'value': ''}))
