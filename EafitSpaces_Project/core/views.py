@@ -30,6 +30,9 @@ def login(request):
             if user is not None:
                 auth_login(request, user)
 
+                # Saber si es admin o no el usuario que ingresa
+                request.session['is_admin'] = user.is_superuser
+                
                 return redirect('home')
             else:
                 form.add_error(None, 'Invalid email or password')
@@ -54,30 +57,50 @@ def home(request):
     
     space_types = SpaceType.objects.all()
     
+    # Verificar si el usuario está autenticado
+    user = request.user  # Obtiene el usuario autenticado
+    is_superuser = user.is_superuser  # Verifica si el usuario es un superusuario
+
     if reserve_confirmation_id:
-        user_id = request.user.user_id
-        user = CustomUser.objects.get(user_id=user_id)
         space_id = Space.objects.get(space_id=reserve_confirmation_id)
         peticion_data = Space.objects.get(space_id=reserve_confirmation_id)
         Reservation.objects.create(user=user, space=space_id, reservation_date=reserve_date, start_time=reserve_start_time, end_time=reserve_end_time)
         Space.objects.filter(space_id=reserve_confirmation_id).update(available=False)
         spaces = Space.objects.all()
-        return render(request, 'home.html', {'spaces': spaces, 'space_id': reserve_confirmation_id,'peticion_data':peticion_data, 'space_types': space_types})
+        return render(request, 'home.html', {
+            'spaces': spaces, 
+            'space_id': reserve_confirmation_id,
+            'peticion_data': peticion_data, 
+            'space_types': space_types, 
+            'is_superuser': is_superuser  # Pasar la variable is_superuser a la plantilla
+        })
     elif reserve_peticion:
         peticion_data = Space.objects.get(space_id=reserve_peticion)
         spaces = Space.objects.all()
-        return render(request, 'home.html', {'spaces': spaces, 'space_id': reserve_peticion, 'peticion_data': peticion_data, 'space_types': space_types})
+        return render(request, 'home.html', {
+            'spaces': spaces, 
+            'space_id': reserve_peticion, 
+            'peticion_data': peticion_data, 
+            'space_types': space_types, 
+            'is_superuser': is_superuser  # Pasar la variable is_superuser a la plantilla
+        })
     else:
         if selected_type:
-            spaces = Space.objects.filter(type__type=selected_type)
+            spaces = Space.objects.filter(type_id__type_id=selected_type)
         else:
             spaces = Space.objects.all()
-            
-        return render(request, 'home.html', {'spaces': spaces, 'space_types': space_types})
+        return render(request, 'home.html', {
+            'spaces': spaces, 
+            'space_types': space_types, 
+            'is_superuser': is_superuser  # Pasar la variable is_superuser a la plantilla
+        })
 
 def index(request):
     if request.user.is_authenticated:
         return redirect('home')
     else:
         return redirect('register')
+    
+def base(request):
+    return render(request, 'base.html')
 
