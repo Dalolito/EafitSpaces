@@ -1,119 +1,179 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-.sidebar-separator {
-    height: 1px; /* Altura del separador */
-    background-color: #ffffff; /* Color del separador */
-    opacity: 0.5; /* Opcional: Transparencia */
+* {
+    font-family: 'Montserrat', sans-serif;
 }
 
 body {
-    background-color: rgb(240, 240, 240);
+    background-color: #f0f2f5;
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
     overflow-x: hidden;
 }
 
-.grid-title {
-    display: grid;
-    gap: 2%; 
-    font-size: 26px;
-    margin-top: 15px;
-}
-
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2%; 
-    padding-top: 2%;
-    padding-left: 5%;
-    padding-right: 5%;
-    padding-bottom: 5%;
-}
-
-.grid-item {
-    border: 3px solid #020873; 
-    padding: 3%;
-    text-align: center;
-    border-radius: 2%;
-    color: #7B7D7D;
-    background-color: #D7DBDD;
-}
-
-.images {
-    display: block;
-    height: 300px;
-    width: 100%;
-    border-radius: 2%;
-}
-
 .grid-head {
-    display: flex; /* Habilita el modelo Flexbox */
-    align-items: center; /* Alinea verticalmente en el centro */
-    justify-content: space-between; /* Espacio entre los elementos */
-    padding: 10px; /* Espacio alrededor del contenedor */
-    padding-left: 5%;
-    padding-right: 5%;
-    padding-top: 2%;
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.grid-title p {
+    font-size: 26px;
+    text-align: center;
+}
+
+.dropdown {
+    position: relative;
 }
 
 .dropbtn {
     background-color: #007bff;
     color: white;
-    padding: 16px;
+    padding: 10px 16px;
     font-size: 16px;
     border: none;
+    border-radius: 4px;
     cursor: pointer;
-    border-radius: 3px;
-}
-
-.cancel_search_button {
-    margin-right: 10px;
-}
-
-.filter-container {
-    display: flex;
-    align-items: center; /* Alinea verticalmente al centro */
-}
-
-.dropdown {
-    position: relative;
-    display: inline-block;
 }
 
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #f9f9f9;
+    background-color: #ffffff;
     min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
     z-index: 1;
+    border-radius: 4px;
 }
 
 .dropdown-content a {
     color: black;
-    padding: 12px 16px;
+    padding: 10px 16px;
     text-decoration: none;
     display: block;
 }
 
 .dropdown-content a:hover {
-    background-color: #f1f1f1
+    background-color: #f1f1f1;
 }
 
 .dropdown:hover .dropdown-content {
     display: block;
 }
 
-.dropdown:hover .dropbtn {
-    background-color: #929292;
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.btn_reserve:hover {
-    background-color: #3498DB;
+.grid-item {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
 }
 
-.btn_reserve:active {
-    background-color: #85C1E9;
-    box-shadow: 0 5px #666;
-    transform: translateY(4px);
+.images {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.space-type {
+    font-size: 24px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-top: 14px;
+}
+
+.space-location {
+    font-size: 20px;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.space-capacity {
+    font-size: 18px;
+    color: #777;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.reservation-title {
+    font-size: 30px; /* Ajusta el tamaño según tu necesidad */
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center; /* O cualquier otra alineación que desees */
+}
+
+.popup_form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 1000px;
+    padding: 20px;
+    z-index: 1001; /* Encima del overlay */
+    display: none;
+}
+
+.popup_content {
+    display: flex;
+}
+
+.form_section, .details_section {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.btn_submit, .btn_close {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.btn_submit:hover, .btn_close:hover {
+    background-color: #0056b3;
+}
+
+.image_reservation, .image_confirmation {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
 }
 
 .overlay {
@@ -122,158 +182,21 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semitransparente */
-    z-index: 1000; /* Asegura que esté detrás del popup_form */
+    background-color: rgba(0, 0, 0, 0.5); /* Oscurece el fondo */
+    z-index: 1000;
     display: none; /* Oculto por defecto */
 }
 
-/* Estilos para el formulario popup */
-.popup_form {
-    position: fixed;
-    background-color: rgba(240, 240, 240, 0.92);
-    color: white;
-    display: none;
-    z-index: 1001; /* Por encima del overlay */
-    left: 10%;
-    top: 10%;
-    width: 80%;
-    height: 80%;
-    overflow: auto;
-    border-radius: 5px;
-}
-
-.form_font {
-    width: 100%;
-    height: 100%;
-    opacity: 0.35;
-}
-
-.title_form {
-    position: absolute;
-    left: 10%;
-    top: 8%;
-    font-size: 300%;
-    font-family: "Montserrat";
-    color: #000000;
-}
-
-.date_title {
-    position: absolute;
-    left: 10%;
-    top: 23%;
-    font-size: 210%;
-    font-family: "Montserrat";
-    color: #000000;
-}
-
-.date_input {
-    width: 38%;
-    position: absolute;
-    left: 10%;
-    top: 30%;
-    font-size: 180%;
-    font-family: "Montserrat";
-    cursor: pointer;
-}
-
-.start_time_title {
-    position: absolute;
-    left: 10%;
-    top: 43%;
-    font-size: 210%;
-    font-family: "Montserrat";
-    color: #000000;
-}
-
-.start_time_input {
-    width: 38%;
-    position: absolute;
-    left: 10%;
-    top: 50%;
-    font-size: 180%;
-    font-family: "Montserrat";
-    cursor: pointer;
-}
-
-.end_time_title {
-    position: absolute;
-    left: 10%;
-    top: 62%;
-    font-size: 210%;
-    font-family: "Montserrat";
-    color: #000000;
-}
-
-.end_time_input {
-    width: 38%;
-    position: absolute;
-    left: 10%;
-    top: 69%;
-    font-size: 180%;
-    font-family: "Montserrat";
-    cursor: pointer;
-}
-
-.button_send {
-    position: absolute;
-    left: 40%;
-    top: 85%;
-    background-color: #007bff;
-    color: white;
+#confirmation_message p {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
     text-align: center;
-    font-size: 130%;
-    cursor: pointer;
-    border-radius: 5%;
-    transition: background-color 0.3s;
-    width: 10%;
-    height: 7%;
-    border-color: #007bff;
+    margin: 20px 0;
 }
 
-.button_close {
-    position: absolute;
-    left: 55%;
-    top: 85%;
-    background-color: #007bff;
-    color: white;
-    text-align: center;
-    font-size: 130%;
-    cursor: pointer;
-    border-radius: 5%;
-    transition: background-color 0.3s;
-    width: 10%;
-    height: 7%;
-    border-color: #007bff;
+#confirmation_message .btn_close {
+    display: block;
+    margin: 0 auto;
 }
 
-.image_reservation {
-    position: absolute;
-    top: 5%;
-    left: 60%;
-    width: 36%;
-    height: 38%;
-    border: 3px solid #020873;
-    border-radius: 4%;
-}
-
-.information {
-    position: absolute;
-    top: 46%;
-    left: 60%;
-    width: 36%;
-    height: 35%;
-    background-color: white;
-    border: 3px solid #020873;
-    border-radius: 4%;
-    color: black;
-    text-align: center;
-}
-
-.image_confirmation {
-    position: absolute;
-    top: 30%;
-    left: 14%;
-    width: 32%;
-    height: 38%;
-    border-radius: 10%;
-}
