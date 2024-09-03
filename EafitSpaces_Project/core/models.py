@@ -40,6 +40,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 class SpaceType(models.Model):
     type_id = models.AutoField(primary_key=True)
     type_name = models.CharField(max_length=255)
+    
+    def __str__(self):
+        return self.type_name
 
 # Space
 class Space(models.Model):
@@ -51,6 +54,9 @@ class Space(models.Model):
     type_id = models.ForeignKey(SpaceType, on_delete=models.CASCADE)
     available = models.BooleanField(default=True)
     available_resources = models.CharField(max_length=255)
+    
+    def __str__(self):
+        return str(self.building_number) + " - " +str(self.room_number)
 
 # Reservation
 class Reservation(models.Model):
