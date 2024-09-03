@@ -1,60 +1,93 @@
-/* login.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #ffffff; /* Fondo blanco para el resto de la página */
+    font-family: "Montserrat";
+    background-color: #f0f2f5;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
 }
 
-.container {
-    background-color: #020873; /* Fondo azul para el cuadro */
-    padding: 50px;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+.header {
     width: 100%;
-    max-width: 270px;
+    max-width: 800px;
     text-align: center;
-}
-
-h2 {
-    color: #ffffff; /* Texto blanco para el título */
     margin-bottom: 40px;
 }
 
-form {
-    background-color: #ffffff; /* Fondo blanco para el formulario */
+.header h1 {
+    color: #020873;
+    margin: 0;
+    font-size: 36px; /* Ajusta el tamaño según tu preferencia */
+}
+
+.container {
+    background-color: #ffffff;
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    box-sizing: border-box;
 }
 
-form p {
-    margin-bottom: 10px;
+h2 {
+    color: #333333;
+    margin-bottom: 30px;
 }
 
-input[type="text"], input[type="password"] {
-    width: 80%;
+h5 {
+    color: #999999; /* Gris más claro para el h5 */
+    margin-bottom: 20px;
+}
+
+form {
+    width: 100%;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #555555;
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 100%;
     padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ced4da;
+    border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 14px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
 }
 
 button[type="submit"] {
     width: 100%;
     padding: 10px;
-    background-color: #0077ff;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
     margin-top: 10px;
+    font-family: "Montserrat";
 }
 
 button[type="submit"]:hover {
@@ -62,20 +95,15 @@ button[type="submit"]:hover {
 }
 
 p {
-    margin-top: 15px;
-    color: #ffffff; /* Texto blanco para el párrafo */
+    margin-top: 20px;
+    color: #555555;
 }
 
 a {
-    color: #ffffff; /* Enlace blanco */
-    text-decoration: underline;
+    color: #007bff;
+    text-decoration: none;
 }
 
 a:hover {
-    text-decoration: none;
-}
-.contraseña {
-    position: fixed;
-    top: 48.5%;
-    left: 46.5%;
+    text-decoration: underline;
 }
