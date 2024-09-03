@@ -1,14 +1,14 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Registro de Usuario</title>
+    <title>User Register</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/register.css' %}">
 </head>
 <body>
     <div class="container">
-        <h2>USER REGISTER</h2>
+        <h2>Register</h2>
+        <h5>Please fill out the following information to register</h5>
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
@@ -27,9 +27,9 @@
                 <label for="password">Password:</label>
                 {{ form.password }}
             </div>
-            <button type="submit">Register</button>
+            <button type="submit">Create Account</button>
         </form>
-        <p>already have an account?<a href="{% url 'login' %}">Login here</a></p>
+        <p>Already have an account?<a href="{% url 'login' %}"> Login here</a></p>
     </div>
 </body>
 </html>
