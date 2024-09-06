@@ -29,7 +29,7 @@ urlpatterns = [
     path('login/', Views.login, name='login'),
     path('logout/', Views.logout, name='logout'),
     path('reservationsAdmin/', Views.reservationsAdmin, name='reservationsAdmin'),
-    path('reservation_history/', Views.reservation_history, name='reservation_history'),
+    path('reservationHistory/', Views.reservationHistory, name='reservationHistory'),
     path('prueba/', Views.prueba, name='prueba'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

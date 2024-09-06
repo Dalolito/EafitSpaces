@@ -103,8 +103,14 @@ def reservationsAdmin(request):
         'reservations': reservations
         }
     )
-def reservation_history(request):
-    return render(request,'reservation_history')
+def reservationHistory(request):
+    user = request.user 
+    id_user = user.user_id
+    reservations = Reservation.objects.all()
+    reservations = reservations.filter(user_id=id_user)
+    return render(request,'reservationHistory.html',{
+    'reservations': reservations
+    })
 
 def prueba(request):
     if request.method == 'POST':
