@@ -27,7 +27,7 @@
                 {% if is_superuser %}
                     <!-- Contenido específico para administradores -->
                     <li class="sidebar-item">
-                        <a href="#" class="sidebar-link">
+                        <a href="/reservationsAdmin" class="sidebar-link">
                             <i class="lni lni-user"></i>
                             <span>Reservations</span>
                         </a>
@@ -80,8 +80,15 @@
                 {% endif %}
             </ul>
         </aside>
+
+        
         
         <div class="main p-0" style="padding: 0px;">
+            <div class="top_bar">
+                <h2 class = "top_bar_title">Eafit Spaces</h2>
+                <img  src="{% static 'img/user_image.png' %}" class="user_image" alt="Imagen de usuario"/>
+                <h2 class = "username_label">{{ user.username|upper }}</h2>
+            </div>
             {% block content %}
             {% endblock %}
         </div>

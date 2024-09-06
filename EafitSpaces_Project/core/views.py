@@ -20,7 +20,6 @@ def register(request):
     return render(request, 'register.html', {'form': form})
 
 def login(request):
-
     if request.method == 'POST':
         form = UserLoginForm(request.POST)
         if form.is_valid():
@@ -47,7 +46,6 @@ def logout(request):
 
 @login_required
 def home(request):
-    
     reserve_peticion = request.GET.get('space_id')
     reserve_confirmation_id = request.GET.get('space_id_reservation')
     reserve_date = request.GET.get('date_reserve')
@@ -100,7 +98,17 @@ def index(request):
         return redirect('home')
     else:
         return redirect('register')
+
+def reservationsAdmin(request):
+    # Verificar si el usuario está autenticado
+    user = request.user  # Obtiene el usuario autenticado
+    is_superuser = user.is_superuser  # Verifica si el usuario es un superusuario
     
-def base(request):
-    return render(request, 'base.html')
+    reservations = Reservation.objects.all()
+    
+    return render(request, 'reservationsAdmin.html', {
+        'is_superuser': is_superuser, 
+        'reservations': reservations
+        }
+    )
 

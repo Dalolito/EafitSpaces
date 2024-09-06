@@ -1,0 +1,60 @@
+{% extends 'sidebar.html' %}
+{% block content %}
+
+<head>
+    <title>Reservation List</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/reservationsAdmin.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
+    <div class="grid-head">
+        <div class="grid-title">
+            <p><b>Reservations list:</b></p>
+        </div>
+    </div>
+    
+    <div class="table-container">        
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">User</th>
+                    <th scope="col">Space</th>
+                    <th scope="col">Reservation Date</th>
+                    <th scope="col">Start Time</th>
+                    <th scope="col">End Time</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reservation in reservations %}
+                <tr>
+                    <th scope="row">{{ reservation.reservation_id }}</th>
+                    <td>{{ reservation.user_id }}</td>
+                    <td>{{ reservation.space_id }}</td>
+                    <td>{{ reservation.reservation_date }}</td>
+                    <td>{{ reservation.start_time }}</td>
+                    <td>{{ reservation.end_time }}</td>
+                    <td>{{ reservation.status }}</td>
+                    <td>
+                        <a href="" class="text-warning">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="" class="text-danger">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endblock %}
+</body>
