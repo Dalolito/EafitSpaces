@@ -6,15 +6,6 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/home_style.css' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        /* Asegúrate de que el estilo por defecto sea ocultar el popup_form */
-        .popup_form {
-            display: none;
-        }
-        .image_confirmation {
-            display: none;
-        }
-    </style>
 </head>
 
 <body>
@@ -28,7 +19,7 @@
         <div class="dropdown">
             <button class="dropbtn">Filter by:</button>
             <div class="dropdown-content">
-                <a href="/">All</a>
+                <a href="{% url 'home' %}">All</a>
                 {% for space_type in space_types %}
                     <a href="?space_type={{ space_type.type_id }}">{{ space_type.type_name }}</a>
                 {% endfor %}
@@ -39,55 +30,51 @@
     <!-- tablas que muestran los espacios Disponibles -->
     <div class="grid-container">
         {% for space in spaces %}
-            {%if space.available == True%}
-                <form action="">
+            {% if space.available %}
+                <form action="" method="get">
                     <div class="grid-item">
                         <img src="{{ space.image.url }}" class="images" alt="Imagen del espacio">
                         <input type="hidden" name="space_id" value="{{ space.space_id }}">
                         <br>
-                        <h1 style="font-size: 24px">{{ space.type_id.type_name }}</h1>
-                        <h2 style="font-size: 20px">{{ space.building_number }}-{{ space.room_number }}</h2>
-                        <h2 style="font-size: 18px"><b>Capacity: </b>{{space.capacity}}</h2>
+                        <div class="space-type">{{ space.type_id.type_name }}</div>
+                        <div class="space-location">{{ space.building_number }}-{{ space.room_number }}</div>
+                        <div class="space-capacity"><b>Capacity: </b>{{ space.capacity }}</div>
                         <br>
-                        <button type = "submit" class="btn btn-primary" onclick="openForm()">Reserve</button>
+                        <button type="submit" class="btn-primary" onclick="openForm()">Reserve</button>
                     </div>
                 </form>
             {% endif %}
         {% endfor %}
     </div>
+
     <!-- formulario emergente cuando se hace click en reserve -->
     <div class="popup_form" id="popup_form">
-        <div>
-            <form id="reservation_form" action="">
-                <input type="hidden" name="space_id_reservation" value="{{ peticion_data.space_id }}">
-                <label for="title_form" class="title_form">Make Reservation</label>
-                
-                <label for="date" class="date_title">Date</label>
-                <input type="date" id="date_reserve" name="date_reserve" required class="date_input">
-
-                <label for="start_time" class="start_time_title">Start time</label>
-                <input type="time" id="start_time" name="start_time" required class="start_time_input">
-
-                <label for="end_time" class="end_time_title">End time</label>
-                <input type="time" id="end_time" name="end_time" required class="end_time_input">
-                
-                <button type = "submit" class="button_send" onclick="submitForm()">Accept</button>
-            </form>
-                <button type="button" class="button_close" onclick="closeForm()">Back</button>
-        <div>
-        
-        <!-- imagen del salon que se desea reservar -->
-    
-        <img src="{{ peticion_data.image.url }}" class="image_reservation" alt="Imagen del espacio">
-        <div class="information">
-            {{ peticion_data.available_resources }}
+        <div class="popup_content">
+            <div class="form_section">
+                <div class="reservation-title">Reservation Form</div>
+                <form id="reservation_form" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="buttons">
+                        <button type="submit" class="btn_submit" onclick="submitForm()">Accept</button>
+                    </div>
+                </form>
+                <button type="button" class="btn_close" onclick="closeForm()">Back</button>
+            </div>
+            <div class="details_section" id="details_section">
+                <img src="{{ peticion_data.image.url }}" class="image_reservation" alt="Imagen del espacio">
+                <div class="information">
+                    {{ peticion_data.available_resources }}
+                </div>
+                <div id="confirmation_message" style="display: none;">
+                    <p>Your reservation has been confirmed!</p>
+                </div>
+                <img id="image_confirmation" src="{% static 'img/image_confirmation.png' %}" class="image_confirmation" alt="Imagen de confirmacion" style="display: none;">
+            </div>
         </div>
-        <!-- imagen de confirmacion de reserva -->
-        <img id="image_confirmation" src="{% static 'img/image_confirmation.png' %}" class="image_confirmation" alt="Imagen de confirmacion">
-    </div>
+    </div>    
 
     {% load static %}
     <script src="{% static 'js/homeForm.js' %}"></script>
     {% endblock %}
 </body>
-<!--<a href="{% url 'logout' %}">Cerrar Sesión</a>

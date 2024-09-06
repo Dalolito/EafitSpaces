@@ -18,35 +18,26 @@ function closeForm() {
 
 // Función para ajustar el estado del formulario al cargar la página
 function ajustarEstadoFormulario() {
-    var estado = localStorage.getItem('popup_form_visible');
-    var formulario = document.getElementById('popup_form');
-    var overlay = document.getElementById('overlay');
-    if (estado === 'true') {
-        formulario.style.display = 'block';
-        overlay.style.display = 'block';
-    } else {
-        formulario.style.display = 'none';
-        overlay.style.display = 'none';
-    }
+    var popupVisible = localStorage.getItem('popup_form_visible');
+    var imageVisible = localStorage.getItem('image_confirmation_visible');
 
-    var estado = localStorage.getItem('image_confirmation_visible');
-    var formulario = document.getElementById('reservation_form');
-    var confirmation = document.getElementById('image_confirmation');
-    if (estado == 'true') {
-        formulario.style.display = 'none';
-        confirmation.style.display = 'block';
-    } else {
-        formulario.style.display = 'block';
-        confirmation.style.display = 'none';
-    }
+    document.getElementById('popup_form').style.display = popupVisible === 'true' ? 'block' : 'none';
+    document.getElementById('overlay').style.display = popupVisible === 'true' ? 'block' : 'none';
+
+    document.getElementById('reservation_form').style.display = imageVisible === 'true' ? 'none' : 'block';
+    document.getElementById('image_confirmation').style.display = imageVisible === 'true' ? 'block' : 'none';
+    document.getElementById('confirmation_message').style.display = imageVisible === 'true' ? 'block' : 'none';
 }
+
 
 // Función para enviar el formulario y mostrar la imagen de confirmación
 function submitForm() {
     document.getElementById("reservation_form").style.display = "none";
     document.getElementById("image_confirmation").style.display = "block";
+    document.getElementById("confirmation_message").style.display = "block";
     localStorage.setItem('image_confirmation_visible', 'true');
 }
+
 
 // Aplicar el estado guardado al cargar la página
 window.onload = ajustarEstadoFormulario;

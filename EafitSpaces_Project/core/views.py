@@ -3,7 +3,7 @@ from .models import Space, Reservation, CustomUser, SpaceType
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegistrationForm, UserLoginForm
+from .forms import UserRegistrationForm, UserLoginForm, ReservationForm
 
 def register(request):
     if request.user.is_authenticated:
@@ -46,51 +46,43 @@ def logout(request):
 
 @login_required
 def home(request):
-    reserve_peticion = request.GET.get('space_id')
-    reserve_confirmation_id = request.GET.get('space_id_reservation')
-    reserve_date = request.GET.get('date_reserve')
-    reserve_start_time = request.GET.get('start_time')
-    reserve_end_time = request.GET.get('end_time')
-    selected_type = request.GET.get('space_type')
-    
     space_types = SpaceType.objects.all()
+    spaces = Space.objects.all()
+    selected_space_id = request.GET.get('space_id')
+    space_type_id = request.GET.get('space_type')
+    
+    if space_type_id:
+        spaces = spaces.filter(type_id=space_type_id)
     
     # Verificar si el usuario está autenticado
     user = request.user  # Obtiene el usuario autenticado
     is_superuser = user.is_superuser  # Verifica si el usuario es un superusuario
-
-    if reserve_confirmation_id:
-        space_id = Space.objects.get(space_id=reserve_confirmation_id)
-        peticion_data = Space.objects.get(space_id=reserve_confirmation_id)
-        Reservation.objects.create(user=user, space=space_id, reservation_date=reserve_date, start_time=reserve_start_time, end_time=reserve_end_time)
-        Space.objects.filter(space_id=reserve_confirmation_id).update(available=False)
-        spaces = Space.objects.all()
-        return render(request, 'home.html', {
-            'spaces': spaces, 
-            'space_id': reserve_confirmation_id,
-            'peticion_data': peticion_data, 
-            'space_types': space_types, 
-            'is_superuser': is_superuser  # Pasar la variable is_superuser a la plantilla
-        })
-    elif reserve_peticion:
-        peticion_data = Space.objects.get(space_id=reserve_peticion)
-        spaces = Space.objects.all()
-        return render(request, 'home.html', {
-            'spaces': spaces, 
-            'space_id': reserve_peticion, 
-            'peticion_data': peticion_data, 
-            'space_types': space_types, 
-            'is_superuser': is_superuser  # Pasar la variable is_superuser a la plantilla
-        })
+    
+    if request.method == 'POST':
+        form = ReservationForm(request.POST)
+        if form.is_valid():
+            form.save()
     else:
-        if selected_type:
-            spaces = Space.objects.filter(type_id__type_id=selected_type)
-        else:
-            spaces = Space.objects.all()
-        return render(request, 'home.html', {
-            'spaces': spaces, 
-            'space_types': space_types, 
-            'is_superuser': is_superuser  # Pasar la variable is_superuser a la plantilla
+        form = ReservationForm(initial={
+            'space_id': selected_space_id,
+            'user_id': user.user_id
+            })
+
+    # Obtener datos del espacio seleccionado
+    peticion_data = None
+    if selected_space_id:
+        try:
+            peticion_data = Space.objects.get(space_id=selected_space_id)
+        except Space.DoesNotExist:
+            peticion_data = None
+
+    return render(request, 'home.html', {
+        'spaces': spaces,
+        'space_types': space_types, 
+        'is_superuser': is_superuser,
+        'space_id': selected_space_id,
+        'form': form,
+        'peticion_data': peticion_data
         })
 
 def index(request):
@@ -112,3 +104,13 @@ def reservationsAdmin(request):
         }
     )
 
+def prueba(request):
+    if request.method == 'POST':
+        form = ReservationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('success_url')  # Redirige a una URL de éxito después de guardar
+    else:
+        form = ReservationForm()
+    
+    return render(request, 'prueba.html', {'form': form})

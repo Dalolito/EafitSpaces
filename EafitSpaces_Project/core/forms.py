@@ -1,6 +1,6 @@
 # core/forms.py
 from django import forms
-from .models import CustomUser
+from .models import CustomUser, Reservation
 
 class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
@@ -11,5 +11,17 @@ class UserRegistrationForm(forms.ModelForm):
 
 
 class UserLoginForm(forms.Form):
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Enter your email', 'value': ''}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Enter your password', 'value': ''}))
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
+
+class ReservationForm(forms.ModelForm):
+    class Meta:
+        model = Reservation
+        fields = ['user_id','space_id','reservation_date','start_time','end_time']
+        widgets = {
+            'reservation_date': forms.DateInput(attrs={'type': 'date'}),  # Para una fecha
+            'start_time': forms.TimeInput(attrs={'type': 'time'}),  # Para una hora
+            'end_time': forms.TimeInput(attrs={'type': 'time'}),  # Para una hora
+            'space_id': forms.HiddenInput(),
+            'user_id': forms.HiddenInput(),
+        }
