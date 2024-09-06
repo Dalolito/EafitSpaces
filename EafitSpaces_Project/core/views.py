@@ -103,6 +103,8 @@ def reservationsAdmin(request):
         'reservations': reservations
         }
     )
+def reservation_history(request):
+    return render(request,'reservation_history')
 
 def prueba(request):
     if request.method == 'POST':
