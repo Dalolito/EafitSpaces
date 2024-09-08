@@ -4,6 +4,8 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegistrationForm, UserLoginForm, ReservationForm
+from django.shortcuts import get_object_or_404
+from django.contrib import messages
 
 def register(request):
     if request.user.is_authenticated:
@@ -114,3 +116,11 @@ def prueba(request):
         form = ReservationForm()
     
     return render(request, 'prueba.html', {'form': form})
+
+@login_required
+def cancel_reservation(request, reservation_id):
+    reservation = get_object_or_404(Reservation, reservation_id=reservation_id)
+    reservation.delete()
+    messages.success(request, 'Reservation cancelled successfully.')
+    return redirect('reservationsAdmin')
+

@@ -7,6 +7,13 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/reservationsAdmin.css' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script type="text/javascript">
+        function confirmDelete(reservationId) {
+            if (confirm("Are you sure you want to cancel the reservation?")) {
+                window.location.href = "/cancel_reservation/" + reservationId + "/";
+            }
+        }
+    </script>
 </head>
 
 <body>
@@ -28,7 +35,6 @@
                     <th scope="col">End Time</th>
                     <th scope="col">Status</th>
                     <th scope="col"></th>
-                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
@@ -42,12 +48,7 @@
                     <td>{{ reservation.end_time }}</td>
                     <td>{{ reservation.status }}</td>
                     <td>
-                        <a href="" class="text-warning">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="" class="text-danger">
+                        <a href="javascript:void(0);" class="text-danger" onclick="confirmDelete('{{ reservation.reservation_id }}')">
                             <i class="fas fa-trash-alt"></i>
                         </a>
                     </td>
@@ -56,5 +57,5 @@
             </tbody>
         </table>
     </div>
-    {% endblock %}
+{% endblock %}
 </body>

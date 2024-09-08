@@ -30,6 +30,7 @@ urlpatterns = [
     path('logout/', Views.logout, name='logout'),
     path('reservationsAdmin/', Views.reservationsAdmin, name='reservationsAdmin'),
     path('prueba/', Views.prueba, name='prueba'),
+    path('cancel_reservation/<int:reservation_id>/', Views.cancel_reservation, name='cancel_reservation'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
