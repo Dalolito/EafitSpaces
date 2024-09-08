@@ -29,6 +29,7 @@ urlpatterns = [
     path('login/', Views.login, name='login'),
     path('logout/', Views.logout, name='logout'),
     path('reservationsAdmin/', Views.reservationsAdmin, name='reservationsAdmin'),
+    path('spacesAdmin/', Views.spacesAdmin, name='spacesAdmin'),
     path('reservationHistory/', Views.reservationHistory, name='reservationHistory'),
     path('prueba/', Views.prueba, name='prueba'),
 ]

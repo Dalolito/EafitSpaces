@@ -103,6 +103,46 @@ def reservationsAdmin(request):
         'reservations': reservations
         }
     )
+def spacesAdmin(request):
+    space_types = SpaceType.objects.all()
+    spaces = Space.objects.all()
+    selected_space_id = request.GET.get('space_id')
+    space_type_id = request.GET.get('space_type')
+    
+    if space_type_id:
+        spaces = spaces.filter(type_id=space_type_id)
+    
+    # Verificar si el usuario está autenticado
+    user = request.user  # Obtiene el usuario autenticado
+    is_superuser = user.is_superuser  # Verifica si el usuario es un superusuario
+    
+    if request.method == 'POST':
+        form = ReservationForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = ReservationForm(initial={
+            'space_id': selected_space_id,
+            'user_id': user.user_id
+            })
+
+    # Obtener datos del espacio seleccionado
+    peticion_data = None
+    if selected_space_id:
+        try:
+            peticion_data = Space.objects.get(space_id=selected_space_id)
+        except Space.DoesNotExist:
+            peticion_data = None
+
+    return render(request, 'spacesAdmin.html', {
+        'spaces': spaces,
+        'space_types': space_types, 
+        'is_superuser': is_superuser,
+        'space_id': selected_space_id,
+        'form': form,
+        'peticion_data': peticion_data
+        })
+
 def reservationHistory(request):
     user = request.user 
     id_user = user.user_id

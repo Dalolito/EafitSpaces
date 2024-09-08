@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    background-color: #f0f2f5;
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+.grid-head {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.grid-title p {
+    font-size: 26px;
+    text-align: center;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropbtn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 16px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #ffffff;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 4px;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 10px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.grid-item {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+}
+
+.images {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.space-type {
+    font-size: 24px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-top: 14px;
+}
+
+.space-location {
+    font-size: 20px;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.space-capacity {
+    font-size: 18px;
+    color: #777;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.reservation-title {
+    font-size: 30px; /* Ajusta el tamaño según tu necesidad */
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center; /* O cualquier otra alineación que desees */
+}
+
+.popup_form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 1000px;
+    padding: 20px;
+    z-index: 1001; /* Encima del overlay */
+    display: none;
+}
+
+.popup_content {
+    display: flex;
+}
+
+.form_section, .details_section {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.btn_submit, .btn_close {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.btn_submit:hover, .btn_close:hover {
+    background-color: #0056b3;
+}
+
+.image_reservation, .image_confirmation {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Oscurece el fondo */
+    z-index: 1000;
+    display: none; /* Oculto por defecto */
+}
+
+#confirmation_message p {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin: 20px 0;
+}
+
+#confirmation_message .btn_close {
+    display: block;
+    margin: 0 auto;
+}
+
+#add-btn {
+    position: fixed;         /* Fija el botón en la misma posición en la pantalla */
+    bottom: 4%;             /* Asegura que el botón esté a un 10% del borde inferior de la ventana */
+    right: 2%;               /* Asegura que el botón esté a un 3% del borde derecho de la ventana */
+    z-index: 1000;           /* Asegura que el botón esté por encima de otros elementos */
+  
+    width: 5.5vw;             /* Define el ancho del botón como un porcentaje del ancho de la ventana */
+    height: 5.5vw;            /* Define la altura del botón igual al ancho para mantener la forma circular */
+    border-radius: 50%;     /* Hace que el botón sea un círculo */
+    background-color: #007bff; /* Color de fondo del botón (puedes cambiarlo) */
+    color: white;            /* Color del texto */
+    font-size: 3vw;          /* Ajusta el tamaño del texto en relación con el tamaño del botón */
+    font-weight: bold;       /* Hace que el texto esté en negrilla */
+    display: flex;           /* Usa Flexbox para centrar el texto dentro del botón */
+    align-items: center;     /* Alinea verticalmente el texto */
+    justify-content: center; /* Alinea horizontalmente el texto */
+    text-align: center;      /* Alinea el texto al centro */
+    border: none;            /* Elimina el borde por defecto del botón */
+}
