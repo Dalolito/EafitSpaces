@@ -29,6 +29,7 @@ urlpatterns = [
     path('login/', Views.login, name='login'),
     path('logout/', Views.logout, name='logout'),
     path('reservationsAdmin/', Views.reservationsAdmin, name='reservationsAdmin'),
+    path('reservationHistory/', Views.reservationHistory, name='reservationHistory'),
     path('prueba/', Views.prueba, name='prueba'),
     path('cancel_reservation/<int:reservation_id>/', Views.cancel_reservation, name='cancel_reservation'),
 ]
