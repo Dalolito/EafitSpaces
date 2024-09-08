@@ -7,13 +7,6 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/reservationsAdmin.css' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <script type="text/javascript">
-        function confirmDelete(reservationId) {
-            if (confirm("Are you sure you want to cancel the reservation?")) {
-                window.location.href = "/cancel_reservation/" + reservationId + "/";
-            }
-        }
-    </script>
 </head>
 
 <body>
@@ -22,8 +15,8 @@
             <p><b>Reservations list:</b></p>
         </div>
     </div>
-    
-    <div class="table-container">        
+
+    <div class="table-container">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -48,6 +41,9 @@
                     <td>{{ reservation.end_time }}</td>
                     <td>{{ reservation.status }}</td>
                     <td>
+                        <a href="javascript:void(0);" class="text-primary" onclick="openEditModal('{{ reservation.reservation_id }}', '{{ reservation.reservation_date }}')">
+                            <i class="fas fa-edit"></i>
+                        </a>
                         <a href="javascript:void(0);" class="text-danger" onclick="confirmDelete('{{ reservation.reservation_id }}')">
                             <i class="fas fa-trash-alt"></i>
                         </a>
@@ -57,5 +53,70 @@
             </tbody>
         </table>
     </div>
-{% endblock %}
+
+    <!-- Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Reservation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm">
+                        <input type="hidden" id="reservationId">
+                        <div class="form-group">
+                            <label for="reservationDate">Reservation Date</label>
+                            <input type="date" class="form-control" id="reservationDate" required>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="saveChanges()">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <script type="text/javascript">
+        function openEditModal(reservationId, reservationDate) {
+            $('#reservationId').val(reservationId);
+            $('#reservationDate').val(reservationDate);
+            $('#editModal').modal('show');
+        }
+
+        function saveChanges() {
+            const reservationId = $('#reservationId').val();
+            const reservationDate = $('#reservationDate').val();
+            
+            $.ajax({
+                url: '/update_reservation_date/',
+                method: 'POST',
+                data: {
+                    'reservation_id': reservationId,
+                    'reservation_date': reservationDate,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    alert('Reservation updated successfully!');
+                    location.reload();
+                },
+                error: function(response) {
+                    alert('An error occurred while updating the reservation.');
+                }
+            });
+        }
+
+        function confirmDelete(reservationId) {
+            if (confirm("Are you sure you want to cancel the reservation?")) {
+                window.location.href = "/cancel_reservation/" + reservationId + "/";
+            }
+        }
+    </script>
+
 </body>
+{% endblock %}
+

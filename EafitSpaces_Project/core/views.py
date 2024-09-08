@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import UserRegistrationForm, UserLoginForm, ReservationForm
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 def register(request):
     if request.user.is_authenticated:
@@ -132,3 +134,18 @@ def cancel_reservation(request, reservation_id):
     messages.success(request, 'Reservation cancelled successfully.')
     return redirect('reservationsAdmin')
 
+@csrf_exempt
+def update_reservation_date(request):
+    if request.method == 'POST':
+        reservation_id = request.POST.get('reservation_id')
+        reservation_date = request.POST.get('reservation_date')
+
+        try:
+            reservation = Reservation.objects.get(reservation_id=reservation_id)
+            reservation.reservation_date = reservation_date
+            reservation.save()
+            return JsonResponse({'status': 'success'}, status=200)
+        except Reservation.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Reservation not found.'}, status=404)
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=400)
