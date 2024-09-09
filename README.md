@@ -27,7 +27,7 @@ Whether you're looking to book a classroom for a lecture or an auditorium for an
 6. Clone the repository from GitHub: `git clone https://github.com/your-repository/EafitSpaces.git`.
 
 7. Access the project folder you just cloned and execute the following commands:
-    - Run `pip install -r requirements.txt` to install all the backend dependencies.
+    - Run `pip install -r requirements.txt` to install all the dependencies.
     - Start the backend server by running: `python manage.py runserver`.
     - Visit `http://localhost:8000/` in your browser to view the project.
 
