@@ -150,23 +150,81 @@ body {
     display: flex;
 }
 
-.form_section, .details_section {
+.form_section {
     flex: 1;
     margin-right: 20px;
+    padding: 20px;
+    background-color: #f9f9f9; /* Fondo claro */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para un efecto de profundidad */
+    display: flex;
+    flex-direction: column; /* Alinea elementos en columna */
+    align-items: center; /* Centra todos los elementos en el eje horizontal */
+    justify-content: center;
 }
 
-.btn_submit, .btn_close {
+.form_section .reservation-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form_section form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espacio entre los campos del formulario */
+}
+
+.form_section input,
+.form_section select,
+.form_section textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.form_section .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Espacio entre los botones */
+}
+
+.form_section .btn_submit {
     background-color: #007bff;
     color: white;
-    padding: 10px;
     border: none;
+    padding: 10px 16px;
+    font-size: 16px;
     border-radius: 4px;
     cursor: pointer;
-    margin: 5px;
+    padding: 10px 16px;
 }
 
-.btn_submit:hover, .btn_close:hover {
-    background-color: #0056b3;
+.form_section .btn_close {
+    background-color: #aaaaaa;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    text-align: center; /* Asegura que el texto del botón esté centrado */
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.form_section .btn_submit:hover,
+.form_section .btn_close:hover {
+    opacity: 0.9;
+}
+
+.details_section {
+    flex: 1;
+    margin-left: 20px;
 }
 
 .image_reservation, .image_confirmation {
@@ -199,4 +257,3 @@ body {
     display: block;
     margin: 0 auto;
 }
-

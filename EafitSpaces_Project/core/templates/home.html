@@ -1,6 +1,3 @@
-
-
-
 {% extends 'sidebar.html' %}
 {% block content %}
 
@@ -55,16 +52,11 @@
         <div class="popup_content">
             <div class="form_section">
                 <div class="reservation-title">Reservation Form</div>
-                <form id="reservation_form" method="post">
+                <form id="reservation_form" method="post" onsubmit="submitForm(event)">
                     {% csrf_token %}
-                    <label for="email">DATE:</label>
-                        {{ form.reservation_date}}
-                    <label for="email">DATE:</label>
-                        {{ form.start_time}}
-                    <label for="email">DATE:</label>
-                        {{ form.reservation_date}}
+                    {{ form.as_p }}
                     <div class="buttons">
-                        <button type="submit" class="btn_submit" onclick="submitForm()">Accept</button>
+                        <button type="submit" class="btn_submit">Accept</button>
                     </div>
                 </form>
                 <button type="button" class="btn_close" onclick="closeForm()">Back</button>
@@ -72,6 +64,7 @@
             <div class="details_section" id="details_section">
                 <img src="{{ peticion_data.image.url }}" class="image_reservation" alt="Imagen del espacio">
                 <div class="information">
+                    <b><p>Resources:</p></b>
                     {{ peticion_data.available_resources }}
                 </div>
                 <div id="confirmation_message" style="display: none;">
@@ -80,7 +73,7 @@
                 <img id="image_confirmation" src="{% static 'img/image_confirmation.png' %}" class="image_confirmation" alt="Imagen de confirmacion" style="display: none;">
             </div>
         </div>
-    </div>    
+    </div>
 
     {% load static %}
     <script src="{% static 'js/homeForm.js' %}"></script>

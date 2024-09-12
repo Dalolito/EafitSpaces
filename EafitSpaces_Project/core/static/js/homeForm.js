@@ -29,15 +29,40 @@ function ajustarEstadoFormulario() {
     document.getElementById('confirmation_message').style.display = imageVisible === 'true' ? 'block' : 'none';
 }
 
-
 // Función para enviar el formulario y mostrar la imagen de confirmación
-function submitForm() {
-    document.getElementById("reservation_form").style.display = "none";
-    document.getElementById("image_confirmation").style.display = "block";
-    document.getElementById("confirmation_message").style.display = "block";
-    localStorage.setItem('image_confirmation_visible', 'true');
-}
+function submitForm(event) {
+    event.preventDefault(); // Evita el envío predeterminado del formulario
 
+    const form = document.getElementById("reservation_form");
+
+    fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: {
+            'X-CSRFToken': form.querySelector('input[name="csrfmiddlewaretoken"]').value
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            // Oculta el formulario
+            form.style.display = "none";
+            document.getElementById("image_confirmation").style.display = "block"; // Muestra la imagen de confirmación
+            document.getElementById("confirmation_message").style.display = "block"; // Muestra el mensaje de confirmación
+            
+            // Oculta la imagen de reserva y los recursos
+            document.querySelector('.image_reservation').style.display = "none";
+            document.querySelector('.information').style.display = "none";
+            
+            localStorage.setItem('image_confirmation_visible', 'true'); // Guarda el estado en localStorage
+        } else {
+            alert("There was a problem with the reservation. Please try again.");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("There was a problem with the reservation. Please try again.");
+    });
+}
 
 // Aplicar el estado guardado al cargar la página
 window.onload = ajustarEstadoFormulario;
