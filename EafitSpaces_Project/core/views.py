@@ -3,7 +3,7 @@ from .models import Space, Reservation, CustomUser, SpaceType
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegistrationForm, UserLoginForm, ReservationForm
+from .forms import UserRegistrationForm, UserLoginForm, ReservationForm, SpacesForm
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.http import JsonResponse
@@ -112,7 +112,7 @@ def spacesAdmin(request):
     spaces = Space.objects.all()
     selected_space_id = request.GET.get('space_id')
     space_type_id = request.GET.get('space_type')
-    
+    type_form = request.GET.get('type_form')
     if space_type_id:
         spaces = spaces.filter(type_id=space_type_id)
     
@@ -121,14 +121,26 @@ def spacesAdmin(request):
     is_superuser = user.is_superuser  # Verifica si el usuario es un superusuario
     
     if request.method == 'POST':
-        form = ReservationForm(request.POST)
-        if form.is_valid():
-            form.save()
+        data = request.POST.get('data')
+        if data == "reservation":
+            form = ReservationForm(request.POST)
+            if form.is_valid():
+                form.save()
+        else:
+            form = SpacesForm(request.POST, request.FILES)  
+            if form.is_valid():
+                form.save()
     else:
-        form = ReservationForm(initial={
-            'space_id': selected_space_id,
-            'user_id': user.user_id
-            })
+        if type_form == "reservation_form":
+            form = ReservationForm(initial={
+                'space_id': selected_space_id,
+                'user_id': user.user_id
+                 })
+        else:
+            form = SpacesForm(initial={
+                'user_id': user.user_id,
+                'available':True
+                 })
 
     # Obtener datos del espacio seleccionado
     peticion_data = None
@@ -146,6 +158,8 @@ def spacesAdmin(request):
         'form': form,
         'peticion_data': peticion_data
         })
+
+
 
 def reservationHistory(request):
     user = request.user 

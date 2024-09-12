@@ -1,13 +1,10 @@
-
-
-
 {% extends 'sidebar.html' %}
 {% block content %}
 
 <head>
     <title>Eafit Spaces</title>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/spacesAdmin.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/spacesAdmin.css'%}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
@@ -36,6 +33,7 @@
             {% if space.available %}
                 <form action="" method="get">
                     <div class="grid-item">
+                        <input type="hidden" name="type_form" value="reservation_form">
                         <img src="{{ space.image.url }}" class="images" alt="Imagen del espacio">
                         <input type="hidden" name="space_id" value="{{ space.space_id }}">
                         <br>
@@ -56,6 +54,7 @@
             <div class="form_section">
                 <div class="reservation-title">Reservation Form</div>
                 <form id="reservation_form" method="post">
+                    <input type="hidden" name="data" value="reservation">
                     {% csrf_token %}
                     {{ form.as_p }}
                     <div class="buttons">
@@ -75,12 +74,45 @@
                 <img id="image_confirmation" src="{% static 'img/image_confirmation.png' %}" class="image_confirmation" alt="Imagen de confirmacion" style="display: none;">
             </div>
         </div>
-    </div>    
+    </div>   
+    
+<!-- formulario emergente cuando se hace click en agregar espacios -->
+<div class="add_space_form" id="add_space_form" style="display:none;">
+    <form id="reservation_form" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="data" value="spaces">
+
+        <!-- Div para el campo Image -->
+        <div class="image-upload">
+            
+        </div>
+        <div class = "bar">___</div>
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <!-- Botones dentro del formulario -->
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-success" id="submit-btn">Enviar</button>
+            <button type="button" class="btn btn-danger" id="close-btn">Cerrar</button>
+        </div>
+    </form>
+</div>
+
+
+
 
     <!-- boton para añadir espacios -->
-    <button type="button" id="add-btn" class="btn btn-primary">+</button>
-  
+    <form action="" method="get">
+        <input type="hidden" name="type_form" value="add_space_form">
+        <button type="button" id="add-btn" class="btn btn-primary" style="position:fixed; bottom:20px; right:20px;">+</button>
+    </form>
+
+    <!-- Mensaje de éxito al enviar el formulario -->
+    <div id="success-message" class="success-message" style="display: none;">
+        ¡Formulario enviado exitosamente!
+    </div>
+
+
     {% load static %}
-    <script src="{% static 'js/homeForm.js' %}"></script>
+    <script src="{% static 'js/spacesAdminForm.js' %}"></script>
     {% endblock %}
 </body>

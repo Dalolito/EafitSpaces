@@ -219,3 +219,169 @@ body {
     text-align: center;      /* Alinea el texto al centro */
     border: none;            /* Elimina el borde por defecto del botón */
 }
+
+/* Formulario para añadir spacios */
+.add_space_form {
+    position: fixed;
+    top: 5%;
+    left: 20%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 1000px;
+    padding: 20px;
+    z-index: 1001; /* Encima del overlay */
+    display: none;
+}
+
+.add_space_form.show {
+    transform: scale(1);
+}
+
+/* Botones dentro del formulario */
+.form-buttons {/* Contenedor del campo de subida de imagen */
+.image-upload {
+    width: 150px;  /* Tamaño del cuadrado */
+    height: 150px;
+    position: relative;
+    display: inline-block;
+}
+
+.image-upload label {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: #f3f3f3;  /* Color de fondo */
+    border: 2px dashed #cccccc;  /* Borde estilo dashed */
+    border-radius: 10px;  /* Esquinas redondeadas */
+    cursor: pointer;
+    text-align: center;
+    position: relative;
+}
+
+.image-upload label img {
+    max-width: 50%;  /* Tamaño del ícono */
+    max-height: 50%;
+    margin-top: 25px;  /* Centramos el ícono verticalmente */
+}
+
+.image-upload input[type="file"] {
+    display: none;  /* Ocultamos el verdadero input de archivo */
+}
+
+/* Hover sobre el área de subida de imagen */
+.image-upload label:hover {
+    background-color: #e1e1e1;
+    border-color: #007bff;  /* Cambia el color del borde al pasar el mouse */
+}
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* Mensaje de éxito */
+.success-message {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: green;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+.bar{
+    position: fixed;
+    left: 70%;
+    top: 8%;
+}
+
+
+
+
+
+.image-upload {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 200px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.image-upload img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+.image-upload input {
+    display: none;
+}
+
+#capacity_input{
+    position: fixed;
+    width: 30%;
+    left: 25%;
+    top: 25%;
+}
+label[for="capacity_input"] {
+    position: fixed;
+    left: 26.3%;
+    top: 20%;
+
+}
+#building_input{
+    position: fixed;
+    width: 30%;
+    left: 25%;
+    top: 8%;
+}
+label[for="building_input"] {
+    position: fixed;
+    left: 26.3%;
+    top: 3%;
+
+}
+#room_input{
+    position: fixed;
+    width: 30%;
+    left: 60%;
+    top: 8%;
+}
+label[for="room_input"] {
+    position: fixed;
+    left: 62.3%;
+    top: 3%;
+
+}
+.bar_building_room{
+    position: fixed;
+    left: 56%;
+    top: 8%;
+    font-weight: bold;
+    
+}
+#type_input{
+    position: fixed;
+    width: 30%;
+    left: 60%;;
+    top: 25%;
+}
+label[for="type_input"] {
+
+    position: fixed;
+    left: 62.3%;
+    top: 20%;
+}
+#image_input2{
+opacity: 0;
+   
+}
