@@ -296,8 +296,9 @@ body {
 
 .bar{
     position: fixed;
-    left: 70%;
+    left: 55.5%;
     top: 8%;
+    font-weight: bold;  
 }
 
 
