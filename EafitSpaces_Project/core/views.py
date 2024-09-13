@@ -108,11 +108,13 @@ def reservationsAdmin(request):
         }
     )
 def spacesAdmin(request):
+
     space_types = SpaceType.objects.all()
     spaces = Space.objects.all()
     selected_space_id = request.GET.get('space_id')
     space_type_id = request.GET.get('space_type')
     type_form = request.GET.get('type_form')
+    print("Formulario válido. Guardando datos...") 
     if space_type_id:
         spaces = spaces.filter(type_id=space_type_id)
     
@@ -121,15 +123,19 @@ def spacesAdmin(request):
     is_superuser = user.is_superuser  # Verifica si el usuario es un superusuario
     
     if request.method == 'POST':
+        
         data = request.POST.get('data')
         if data == "reservation":
             form = ReservationForm(request.POST)
             if form.is_valid():
                 form.save()
+
         else:
             form = SpacesForm(request.POST, request.FILES)  
             if form.is_valid():
                 form.save()
+            else:
+                print(form.errors) 
     else:
         if type_form == "reservation_form":
             form = ReservationForm(initial={
@@ -156,7 +162,8 @@ def spacesAdmin(request):
         'is_superuser': is_superuser,
         'space_id': selected_space_id,
         'form': form,
-        'peticion_data': peticion_data
+        'peticion_data': peticion_data,
+        'errors': form.errors  
         })
 
 

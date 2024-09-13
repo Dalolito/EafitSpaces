@@ -29,7 +29,7 @@ class ReservationForm(forms.ModelForm):
 class SpacesForm(forms.ModelForm):
     class Meta:
         model = Space
-        fields = ['space_id', 'capacity', 'building_number', 'room_number', 'image', 'type_id', 'available', 'available_resources']
+        fields = ['capacity', 'building_number', 'room_number', 'image', 'type_id', 'available', 'available_resources']
         widgets = {
             'capacity': forms.NumberInput(attrs={
                 'class': 'form-control', 
@@ -48,7 +48,9 @@ class SpacesForm(forms.ModelForm):
             }),
             'image': forms.ClearableFileInput(attrs={
                 'class': 'form-control-file',
-                 'accept':'image/*',
+                'accept': 'image/*',
+                'id': 'id_image',  
+                'onchange': 'handleImageChange(event)',
             }),
             'type_id':  forms.Select(attrs={'class': 'form-control', 'id': 'type_input',}),
             'available': forms.HiddenInput(),

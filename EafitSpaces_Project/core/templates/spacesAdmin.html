@@ -82,10 +82,9 @@
         <input type="hidden" name="data" value="spaces">
 
         <!-- Div para el campo Image -->
-        <div class="image-upload">
-            
-        </div>
+        <img id="image_preview" src="{% static 'img/image_placeholder_icon.png' %}" alt="Preview" class="img-fluid">
         <div class = "bar">_____</div>
+
         {% csrf_token %}
         {{ form.as_p }}
 
@@ -110,6 +109,14 @@
     <div id="success-message" class="success-message" style="display: none;">
         ¡Formulario enviado exitosamente!
     </div>
+
+    {% if errors %}
+    <div class="errorlist">
+        {% for field, error_list in errors.items %}
+            <p>{{ field }}: {{ error_list }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
 
 
     {% load static %}

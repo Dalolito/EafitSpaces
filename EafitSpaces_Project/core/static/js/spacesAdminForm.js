@@ -1,3 +1,4 @@
+
 function openForm() {
     document.getElementById("popup_form").style.display = "block";
     document.getElementById("overlay").style.display = "block";
@@ -37,6 +38,25 @@ function submitForm() {
     localStorage.setItem('image_confirmation_visible', 'true');
 }
 
+function handleImageChange(event) {
+    const file = event.target.files[0];  // Obtenemos el archivo seleccionado
+    const imagePreview = document.getElementById('image_preview');  // Obtenemos el elemento de previsualización
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            imagePreview.src = e.target.result;  // Actualizamos la imagen de vista previa
+            imagePreview.style.display = 'block';  // Mostramos la imagen
+        }
+        reader.readAsDataURL(file);  // Convertimos la imagen seleccionada a una URL
+    } else {
+        imagePreview.src = "{% static 'img/image_placeholder_icon.png' %}";  // Si no hay imagen, se muestra la predeterminada
+    }
+}
+
+
+
+
 // Aplicar el estado guardado al cargar la página
 window.onload = ajustarEstadoFormulario;
 
@@ -50,8 +70,10 @@ const form = document.getElementById('reservation_form');
 // Función para alternar el formulario de agregar espacios
 addBtn.addEventListener('click', () => {
     if (formContainer.style.display === 'block') {
+        document.getElementById("overlay").style.display = "none";
         formContainer.style.display = 'none'; // Oculta el formulario si está abierto
     } else {
+        document.getElementById("overlay").style.display = "block";
         formContainer.style.display = 'block'; // Muestra el formulario si está oculto
         formContainer.classList.add('show');
     }
@@ -59,6 +81,7 @@ addBtn.addEventListener('click', () => {
 
 // Función para cerrar el formulario
 closeBtn.addEventListener('click', () => {
+    document.getElementById("overlay").style.display = "none";
     formContainer.style.display = 'none';
 });
 
@@ -77,27 +100,3 @@ form.addEventListener('submit', (event) => {
         successMessage.style.display = 'none';
     }, 3000);
 });
-
-
-// Obtener el input de imagen y la etiqueta de vista previa
-
-// Accede al input del archivo con el id 'image_input' y al contenedor de la imagen de vista previa
-// Verifica el ID generado automáticamente por Django en el campo de imagen
-const imageInput = document.getElementById('id_image');  // Asegúrate que 'id_image' sea correcto
-const imagePreview = document.getElementById('image_preview');
-
-imageInput.addEventListener('change', function() {
-    console.log("Imagen seleccionada");
-    const file = this.files[0];  // Obtén el archivo seleccionado
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            imagePreview.src = e.target.result;  // Actualiza el src de la imagen
-        }
-        reader.readAsDataURL(file);  // Convierte la imagen seleccionada a Data URL
-    } else {
-        imagePreview.src = "{% static 'img/image_placeholder_icon.png' %}";  // Imagen por defecto si no se selecciona ninguna
-    }
-});
-
-

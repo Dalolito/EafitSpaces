@@ -223,7 +223,7 @@ body {
 /* Formulario para añadir spacios */
 .add_space_form {
     position: fixed;
-    top: 5%;
+    top: 15%;
     left: 20%;
     transform: translate(-50%, -50%);
     background-color: #ffffff;
@@ -302,6 +302,16 @@ body {
 }
 
 
+
+
+
+#image_preview {
+    width: 200px; /* O el tamaño que desees */
+    height: 200px; /* O el tamaño que desees */
+    border: 1px dashed #ccc;
+    display: block; /* Asegura que esté visible */
+    margin-top: 10px;
+}
 
 
 
