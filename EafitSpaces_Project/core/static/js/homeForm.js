@@ -1,3 +1,5 @@
+
+
 function openForm() {
     document.getElementById("popup_form").style.display = "block";
     document.getElementById("overlay").style.display = "block";
@@ -66,3 +68,14 @@ function submitForm(event) {
 
 // Aplicar el estado guardado al cargar la página
 window.onload = ajustarEstadoFormulario;
+
+
+
+
+
+
+
+
+
+
+

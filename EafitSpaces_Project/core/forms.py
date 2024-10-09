@@ -1,6 +1,8 @@
 # core/forms.py
 from django import forms
 from .models import CustomUser, Reservation, Space
+from datetime import date, timedelta
+
 
 class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
@@ -17,14 +19,37 @@ class UserLoginForm(forms.Form):
 class ReservationForm(forms.ModelForm):
     class Meta:
         model = Reservation
-        fields = ['user_id','space_id','reservation_date','start_time','end_time']
+        fields = ['user_id', 'space_id', 'reservation_date', 'start_time', 'end_time']
         widgets = {
-            'reservation_date': forms.DateInput(attrs={'type': 'date'}),  # Para una fecha
-            'start_time': forms.TimeInput(attrs={'type': 'time'}),  # Para una hora
-            'end_time': forms.TimeInput(attrs={'type': 'time'}),  # Para una hora
+            'reservation_date': forms.DateInput(attrs={
+                'type': 'date',
+                'id': 'id_reservation_date',
+                'class': 'reservation_input',
+                'min': date.today().strftime('%Y-%m-%d'),
+                'max': (date.today() + timedelta(days=365)).strftime('%Y-%m-%d') 
+                }),
+            'start_time': forms.Select(attrs={
+                'class': 'reservation_input',
+                'id': 'id_start_time'  # Asegúrate de que el ID sea consistente
+            }),
+            'end_time': forms.Select(attrs={
+                'type': 'time',
+                'min': '06:00',
+                'max': '22:00',
+                'step': 1800,
+                'class': 'reservation_input',
+                'id': 'id_end_time',  # Asegúrate de que el ID sea consistente
+            }),
             'space_id': forms.HiddenInput(),
             'user_id': forms.HiddenInput(),
         }
+    
+    def __init__(self, space_id, *args, **kwargs):
+        available_times = kwargs.pop('available_times', [])
+        super().__init__(*args, **kwargs)
+        self.fields['start_time'].choices = available_times
+     
+
 
 class SpacesForm(forms.ModelForm):
     class Meta:

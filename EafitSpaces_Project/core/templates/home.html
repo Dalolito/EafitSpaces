@@ -1,81 +1,193 @@
-{% extends 'sidebar.html' %}
-{% block content %}
+    {% extends 'sidebar.html' %}
+    {% block content %}
 
-<head>
-    <title>Eafit Spaces</title>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/home_style.css' %}">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
+    <head>
+        <title>Eafit Spaces</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/home_style2.css' %}">
+    </head>
 
-<body>
-    <div class="overlay" id="overlay"></div>
+    <body>
+        <div class="overlay" id="overlay"></div>
 
-    <div class="grid-head">
-        <div class="grid-title">
-            <p><b>Available Spaces:</b></p>
-        </div>
-
-        <div class="dropdown">
-            <button class="dropbtn">Filter by:</button>
-            <div class="dropdown-content">
-                <a href="{% url 'home' %}">All</a>
-                {% for space_type in space_types %}
-                    <a href="?space_type={{ space_type.type_id }}">{{ space_type.type_name }}</a>
-                {% endfor %}
+        <div class="grid-head">
+            <div class="grid-title">
+                <p><b>Available Spaces:</b></p>
             </div>
-        </div>
-    </div>
 
-    <!-- tablas que muestran los espacios Disponibles -->
-    <div class="grid-container">
-        {% for space in spaces %}
-            {% if space.available %}
-                <form action="" method="get">
-                    <div class="grid-item">
-                        <img src="{{ space.image.url }}" class="images" alt="Imagen del espacio">
-                        <input type="hidden" name="space_id" value="{{ space.space_id }}">
-                        <br>
-                        <div class="space-type">{{ space.type_id.type_name }}</div>
-                        <div class="space-location">{{ space.building_number }}-{{ space.room_number }}</div>
-                        <div class="space-capacity"><b>Capacity: </b>{{ space.capacity }}</div>
-                        <br>
-                        <button type="submit" class="btn-primary" onclick="openForm()">Reserve</button>
-                    </div>
-                </form>
-            {% endif %}
-        {% endfor %}
-    </div>
-
-    <!-- formulario emergente cuando se hace click en reserve -->
-    <div class="popup_form" id="popup_form">
-        <div class="popup_content">
-            <div class="form_section">
-                <div class="reservation-title">Reservation Form</div>
-                <form id="reservation_form" method="post" onsubmit="submitForm(event)">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <div class="buttons">
-                        <button type="submit" class="btn_submit">Accept</button>
-                    </div>
-                </form>
-                <button type="button" class="btn_close" onclick="closeForm()">Back</button>
-            </div>
-            <div class="details_section" id="details_section">
-                <img src="{{ peticion_data.image.url }}" class="image_reservation" alt="Imagen del espacio">
-                <div class="information">
-                    <b><p>Resources:</p></b>
-                    {{ peticion_data.available_resources }}
+            <div class="dropdown">
+                <button class="dropbtn">Filter by:</button>
+                <div class="dropdown-content">
+                    <a href="{% url 'home' %}">All</a>
+                    {% for space_type in space_types %}
+                        <a href="?space_type={{ space_type.type_id }}">{{ space_type.type_name }}</a>
+                    {% endfor %}
                 </div>
-                <div id="confirmation_message" style="display: none;">
-                    <p>Your reservation has been confirmed!</p>
-                </div>
-                <img id="image_confirmation" src="{% static 'img/image_confirmation.png' %}" class="image_confirmation" alt="Imagen de confirmacion" style="display: none;">
             </div>
         </div>
-    </div>
 
-    {% load static %}
-    <script src="{% static 'js/homeForm.js' %}"></script>
-    {% endblock %}
-</body>
+        <!-- tablas que muestran los espacios Disponibles -->
+        <div class="grid-container">
+            {% for space in spaces %}
+                {% if space.available %}
+                    <form action="" method="get">
+                        <div class="grid-item">
+                            <img src="{{ space.image.url }}" class="images" alt="Imagen del espacio">
+                            <input type="hidden" name="space_id" value="{{ space.space_id }}">
+                            <br>
+                            <div class="space-type">{{ space.type_id.type_name }}</div>
+                            <div class="space-location">{{ space.building_number }}-{{ space.room_number }}</div>
+                            <div class="space-capacity"><b>Capacity: </b>{{ space.capacity }}</div>
+                            <br>
+                            <button type="submit" class="btn-primary" onclick="openForm()">Reserve</button>
+                        </div>
+                    </form>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- formulario emergente cuando se hace click en reserve -->
+        <div class="popup_form" id="popup_form">
+            <div class="popup_content">
+                <div class="form_section">
+                    <div class="reservation-title">Reservation Form</div>
+                    <form id="reservation_form" method="post" onsubmit="submitForm(event)">
+                        {% csrf_token %}
+                        <label for="reservation_date" class = "input_title">Reservation Date:</label>
+                        {{ form.reservation_date }}
+                        <label for="reservation_date" class = "input_title">Start time:</label>
+                        {{ form.start_time }}
+                        <label for="reservation_date" class = "input_title">End</label>
+                        {{ form.end_time }}
+                        {{ form.space_id }}
+                        {{ form.user_id }}
+                        <input type="hidden" name="space_reserve_id" value={{peticion_data.space_id}}>
+                        <div class="buttons">
+                            <button type="submit" class="btn_submit">Accept</button>
+                        </div>
+                    </form>
+                    <button type="button" class="btn_close" onclick="closeForm()">Back</button>
+                </div>
+                <div class="details_section" id="details_section">
+                    <img src="{{ peticion_data.image.url }}" class="image_reservation" alt="Imagen del espacio">
+                    <div class="information">
+                        <b><p>Resources:</p></b>
+                        {{ peticion_data.available_resources }}
+                    </div>
+                    <div id="confirmation_message" style="display: none;">
+                        <p>Your reservation has been confirmed!</p>
+                    </div>
+                    <img id="image_confirmation" src="{% static 'img/image_confirmation.png' %}" class="image_confirmation" alt="Imagen de confirmacion" style="display: none;">
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const reservationDateInput = document.getElementById('id_reservation_date');
+                const startTimeSelect = document.getElementById('id_start_time');
+                const endTimeSelect = document.getElementById('id_end_time');
+                const spaceId = document.querySelector('input[name="space_reserve_id"]').value;
+            
+                // Definir availableHours como una variable global para que sea accesible más tarde
+                let availableHours = [];
+            
+                // Inicialmente deshabilitamos los selects
+                startTimeSelect.disabled = true;
+                endTimeSelect.disabled = true;
+                startTimeSelect.style.backgroundColor = '#ccd1d1';
+                endTimeSelect.style.backgroundColor = '#ccd1d1';
+            
+                reservationDateInput.addEventListener('change', function () {
+                    const selectedDate = reservationDateInput.value;
+            
+                    // Al cambiar la fecha, deshabilitar y limpiar el campo de end_time
+                    endTimeSelect.disabled = true;
+                    endTimeSelect.style.backgroundColor = '#ccd1d1';
+                    endTimeSelect.innerHTML = '';  // Limpiar las opciones de end_time
+            
+                    if (selectedDate) {
+                        // Hacer la solicitud para obtener las horas disponibles para la fecha seleccionada
+                        fetch(`/get-available-hours/?space_id=${spaceId}&reservation_date=${selectedDate}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                // Asignar las horas disponibles a la variable global
+                                availableHours = data.available_hours || [];
+            
+                                // Limpiar las opciones de start_time
+                                startTimeSelect.innerHTML = '';
+            
+                                // Verificar si hay horas disponibles y rellenar el select de start_time
+                                if (availableHours.length > 0) {
+                                    availableHours.forEach(hour => {
+                                        const option = document.createElement('option');
+                                        option.value = hour[0];
+                                        option.text = hour[1];
+                                        startTimeSelect.add(option);
+                                    });
+            
+                                    // Habilitar el select de start_time
+                                    startTimeSelect.disabled = false;
+                                    startTimeSelect.style.backgroundColor = 'white';
+                                } else {
+                                    startTimeSelect.disabled = true;
+                                    startTimeSelect.style.backgroundColor = '#ccd1d1';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error fetching available hours:', error);
+                            });
+                    } else {
+                        // Si no hay una fecha seleccionada, deshabilitar el select de start_time
+                        startTimeSelect.disabled = true;
+                        startTimeSelect.style.backgroundColor = '#ccd1d1';
+                    }
+                });
+            
+                // Escuchar cambios en el select de start_time
+                startTimeSelect.addEventListener('change', function () {
+                    const selectedStartTime = startTimeSelect.value;
+                    endTimeSelect.innerHTML = '';
+            
+                    if (selectedStartTime && availableHours.length > 0) {
+                        endTimeSelect.style.backgroundColor = 'white';
+                        const [startHour, startMinute] = selectedStartTime.split(':').map(Number);
+                        const startTimeInMinutes = startHour * 60 + startMinute;
+            
+                        // Filtrar las opciones de end_time según la hora de inicio seleccionada
+                        availableHours.forEach(hour => {
+                            const [endHour, endMinute] = hour[0].split(':').map(Number);
+                            const endTimeInMinutes = endHour * 60 + endMinute;
+            
+                            const difference = endTimeInMinutes - startTimeInMinutes;
+            
+                            console.log(`Processing hour: ${hour[0]}, Difference: ${difference} minutes`);
+            
+                            // Solo permitir tiempos entre 1 hora (60 minutos) y 3 horas (180 minutos)
+                            if (difference >= 60 && difference <= 180) {
+                                const option = document.createElement('option');
+                                option.value = hour[0];
+                                option.text = hour[1];
+                                endTimeSelect.add(option);
+                                console.log(`Added option: ${hour[1]}`);
+                            }
+                        });
+            
+                        endTimeSelect.disabled = false;
+                    } else {
+                        endTimeSelect.disabled = true;
+                        endTimeSelect.style.backgroundColor = '#ccd1d1';
+                    }
+                });
+            });
+            
+        </script>
+
+        {% load static %}
+        <script src="{% static 'js/homeForm.js' %}"></script>
+        {% endblock %}
+    </body>

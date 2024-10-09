@@ -73,6 +73,8 @@ class Reservation(models.Model):
     ]
     
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Available')
+    def __str__(self):
+        return f"Reserva desde {self.start_time} hasta {self.end_time}"
 
 # Resource
 class Resource(models.Model):

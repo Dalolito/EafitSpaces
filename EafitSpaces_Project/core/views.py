@@ -8,6 +8,8 @@ from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime
+import json
 
 def register(request):
     if request.user.is_authenticated:
@@ -48,46 +50,153 @@ def logout(request):
     auth_logout(request)
     return redirect('login')
 
+
+def get_available_hours(request):
+    selected_space_id = request.GET.get('space_id')
+    reservation_date = request.GET.get('reservation_date')
+    print(selected_space_id)
+    print(reservation_date)
+
+    available_hours = []
+
+    if selected_space_id and reservation_date:
+        # Convertir la fecha de reserva a un objeto datetime
+        reservation_date = datetime.strptime(reservation_date, '%Y-%m-%d').date()
+
+        # Filtrar reservas por espacio y fecha
+        reservas = Reservation.objects.filter(space_id=selected_space_id, reservation_date=reservation_date)
+
+        all_times = [
+            ('06:00', '06:00 AM'), ('06:30', '06:30 AM'), 
+            ('07:00', '07:00 AM'), ('07:30', '07:30 AM'), 
+            ('08:00', '08:00 AM'), ('08:30', '08:30 AM'),
+            ('09:00', '09:00 AM'), ('09:30', '09:30 AM'),
+            ('10:00', '10:00 AM'), ('10:30', '10:30 AM'),
+            ('11:00', '11:00 AM'), ('11:30', '11:30 AM'),
+            ('12:00', '12:00 PM'), ('12:30', '12:30 PM'),
+            ('13:00', '01:00 PM'), ('13:30', '01:30 PM'),
+            ('14:00', '02:00 PM'), ('14:30', '02:30 PM'),
+            ('15:00', '03:00 PM'), ('15:30', '03:30 PM'),
+            ('16:00', '04:00 PM'), ('16:30', '04:30 PM'),
+            ('17:00', '05:00 PM'), ('17:30', '05:30 PM'),
+            ('18:00', '06:00 PM'), ('18:30', '06:30 PM'),
+            ('19:00', '07:00 PM'), ('19:30', '07:30 PM'),
+            ('20:00', '08:00 PM'), ('20:30', '08:30 PM'),
+            ('21:00', '09:00 PM'), ('21:30', '09:30 PM'),
+            ('22:00', '10:00 PM')
+        ]
+
+        # Filtrar las horas disponibles según las reservas
+        for hour, display in all_times:
+            hour_time = datetime.strptime(hour, '%H:%M').time()
+            print(hour_time)
+            is_available = True
+            
+            print(":::::::::::::")
+            for reserva in reservas:
+                print(reserva)
+                print("________________________")
+                if reserva.start_time <= hour_time < reserva.end_time:
+                    is_available = False
+                    break
+
+            if is_available:
+                available_hours.append((hour, display))
+
+    return JsonResponse({'available_hours': available_hours})
+
 @login_required
 def home(request):
     space_types = SpaceType.objects.all()
     spaces = Space.objects.all()
+    
     selected_space_id = request.GET.get('space_id')
     space_type_id = request.GET.get('space_type')
     
     if space_type_id:
         spaces = spaces.filter(type_id=space_type_id)
     
-    # Verificar si el usuario está autenticado
-    user = request.user  # Obtiene el usuario autenticado
-    is_superuser = user.is_superuser  # Verifica si el usuario es un superusuario
-    
+    user = request.user
+    is_superuser = user.is_superuser
+    available_hours = []
+
+    if selected_space_id:
+        # Obtener todas las horas reservadas para el espacio seleccionado
+        reservas = Reservation.objects.filter(space_id=selected_space_id)
+        
+        # Todas las horas posibles
+        all_times = [
+            ('06:00', '06:00 AM'), ('06:30', '06:30 AM'), 
+            ('07:00', '07:00 AM'), ('07:30', '07:30 AM'), 
+            ('08:00', '08:00 AM'), ('08:30', '08:30 AM'),
+            ('09:00', '09:00 AM'), ('09:30', '09:30 AM'),
+            ('10:00', '10:00 AM'), ('10:30', '10:30 AM'),
+            ('11:00', '11:00 AM'), ('11:30', '11:30 AM'),
+            ('12:00', '12:00 PM'), ('12:30', '12:30 PM'),
+            ('13:00', '01:00 PM'), ('13:30', '01:30 PM'),
+            ('14:00', '02:00 PM'), ('14:30', '02:30 PM'),
+            ('15:00', '03:00 PM'), ('15:30', '03:30 PM'),
+            ('16:00', '04:00 PM'), ('16:30', '04:30 PM'),
+            ('17:00', '05:00 PM'), ('17:30', '05:30 PM'),
+            ('18:00', '06:00 PM'), ('18:30', '06:30 PM'),
+            ('19:00', '07:00 PM'), ('19:30', '07:30 PM'),
+            ('20:00', '08:00 PM'), ('20:30', '08:30 PM'),
+            ('21:00', '09:00 PM'), ('21:30', '09:30 PM'),
+            ('22:00', '10:00 PM')
+        ]
+        
+        # Convertir las horas posibles a objetos datetime para facilitar comparaciones
+        from datetime import datetime
+
+        # Filtrar las horas disponibles para que no estén en el rango de ninguna reserva
+        available_hours = []
+
+        for hour, display in all_times:
+            # Convertir la hora a un objeto datetime para comparar
+            hour_time = datetime.strptime(hour, '%H:%M').time()
+            is_available = True
+
+            # Verificar si la hora cae dentro de algún rango de reserva
+            for reserva in reservas:
+                start_time = reserva.start_time
+                end_time = reserva.end_time
+
+                # Si la hora está entre la hora de inicio y fin de la reserva, marcarla como no disponible
+                if start_time <= hour_time < end_time:
+                    is_available = False
+                    break
+
+            # Si la hora no está dentro de ningún rango reservado, agregarla a las horas disponibles
+            if is_available:
+                available_hours.append((hour, display))
+
+
+    # Convertir available_hours a JSON
+    available_hours_json = json.dumps(available_hours)
+
     if request.method == 'POST':
-        form = ReservationForm(request.POST)
+        form = ReservationForm(space_id=selected_space_id, data=request.POST)
         if form.is_valid():
             form.save()
+            return redirect('home')
     else:
-        form = ReservationForm(initial={
+        form = ReservationForm(space_id=selected_space_id, initial={
             'space_id': selected_space_id,
             'user_id': user.user_id
-            })
+        })
 
-    # Obtener datos del espacio seleccionado
-    peticion_data = None
-    if selected_space_id:
-        try:
-            peticion_data = Space.objects.get(space_id=selected_space_id)
-        except Space.DoesNotExist:
-            peticion_data = None
+    peticion_data = Space.objects.get(space_id=selected_space_id) if selected_space_id else None
 
     return render(request, 'home.html', {
         'spaces': spaces,
-        'space_types': space_types, 
+        'space_types': space_types,
         'is_superuser': is_superuser,
         'space_id': selected_space_id,
         'form': form,
-        'peticion_data': peticion_data
-        })
+        'peticion_data': peticion_data,
+        'available_hours': available_hours_json  # Pasar las horas disponibles como JSON al template
+    })
+
 
 def index(request):
     if request.user.is_authenticated:
@@ -95,6 +204,7 @@ def index(request):
     else:
         return redirect('register')
 
+@login_required
 def reservationsAdmin(request):
     # Verificar si el usuario está autenticado
     user = request.user  # Obtiene el usuario autenticado
@@ -107,6 +217,7 @@ def reservationsAdmin(request):
         'reservations': reservations
         }
     )
+@login_required
 def spacesAdmin(request):
 
     space_types = SpaceType.objects.all()
@@ -167,7 +278,7 @@ def spacesAdmin(request):
         })
 
 
-
+@login_required
 def reservationHistory(request):
     user = request.user 
     id_user = user.user_id
