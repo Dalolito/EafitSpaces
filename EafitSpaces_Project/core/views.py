@@ -10,6 +10,10 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 import json
+from django.utils import timezone
+from datetime import timedelta
+from collections import Counter
+from django.db.models import Count
 
 def register(request):
     if request.user.is_authenticated:
@@ -277,6 +281,56 @@ def spacesAdmin(request):
         'errors': form.errors  
         })
 
+
+@login_required
+def statisticsAdmin(request):
+    # Calcular la fecha de hace 6 meses desde hoy
+    six_months_ago = timezone.now() - timedelta(days=180)
+    
+    # Filtrar las reservas de los últimos 6 meses
+    reservations = Reservation.objects.filter(reservation_date__gte=six_months_ago)
+    
+    # Inicializar un contador para cada hora del día de 6 AM a 10 PM (22:00)
+    hours_count = Counter({hour: 0 for hour in range(6, 23)})  # De 6 a 22 (6 AM a 10 PM)
+
+    # Iterar sobre cada reserva y contar todas las horas que abarca
+    for reservation in reservations:
+        # Obtener la hora de inicio y fin de la reserva (en formato datetime.time)
+        start_hour = reservation.start_time.hour
+        end_hour = reservation.end_time.hour
+
+        # Asegurarnos de que solo contemos horas dentro del rango de 6 AM a 10 PM
+        for hour in range(max(start_hour, 6), min(end_hour, 22) + 1):
+            hours_count[hour] += 1
+
+    # Extraer las listas de horas y sus respectivos conteos
+    hours = list(hours_count.keys())
+    counts = list(hours_count.values())
+
+
+    reservations = Reservation.objects.filter(reservation_date__gte=six_months_ago)
+
+    # Agrupar las reservas por el número de edificio (building_number) y contar cuántas hay para cada uno
+    reservations_count = (
+        reservations.values('space_id__building_number')
+        .annotate(total=Count('reservation_id'))
+        .order_by('space_id__building_number')
+    )
+
+    # Preparar los datos para el gráfico
+    blocks = [item['space_id__building_number'] for item in reservations_count]
+    counts2 = [item['total'] for item in reservations_count]
+
+    # Verificar si el usuario está autenticado
+    user = request.user  # Obtiene el usuario autenticado
+    is_superuser = user.is_superuser  # Verifica si el usuario es un superusuario
+    return render(request, 'statisticsAdmin.html', {
+        'hours': hours,
+        'counts': counts,
+        'is_superuser': is_superuser,
+        'blocks': blocks,
+        'counts2': counts2,
+        })
 
 @login_required
 def reservationHistory(request):

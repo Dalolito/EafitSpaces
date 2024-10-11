@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    background-color: #ffffff;
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+}
+.container_satistics_1{
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f1f1f1;
+    position: relative;
+    margin-left: 1%;
+    width: 47%;
+    height: 50%;
+    margin-top: 2%;
+}
+#reservationsByHourChart {   
+    margin: 3%;  
+    position: absolute;
+    max-width: 100%;   /* Limita el ancho máximo */
+    max-height: 80%;    /* Establece la altura a 400px */
+}
+.container_satistics_2{
+    position: relative;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f1f1f1;
+    left: 50%;
+    width: 47%;
+    height: 50%;
+    top: -51%;
+}
+#reservationsByBuildingChart {   
+    margin: 5%;  
+    position: absolute;
+    max-width: 100%;   /* Limita el ancho máximo */
+    max-height: 80%;    /* Establece la altura a 400px */
+}
+.images {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+.collapse_containr_1{
+    position: relative;
+    top: -56.8%;
+    left: 1%;
+    max-width: 47.2%;
+}
+#card_text{
+    background-color: #f1f1f1;
+}
+#collapse_button{
+    width: 20%;
+    font-size: 5%;
+}
+/* Asegúrate de incluir esto en tu archivo CSS o dentro de una etiqueta <style> en la plantilla */
+.responsive-text {
+    font-size: 5px; /* Tamaño de texto por defecto para pantallas pequeñas */
+}
+
+@media (min-width: 576px) {
+    .responsive-text {
+        font-size: 6px; /* Tamaño de texto para pantallas a partir de 576px (sm) */
+    }
+}
+
+@media (min-width: 768px) {
+    .responsive-text {
+        font-size: 8px; /* Tamaño de texto para pantallas medianas (md) */
+    }
+}
+
+@media (min-width: 992px) {
+    .responsive-text {
+        font-size: 10px; /* Tamaño de texto para pantallas grandes (lg) */
+    }
+}
+
+@media (min-width: 1200px) {
+    .responsive-text {
+        font-size: 15px; /* Tamaño de texto para pantallas extra grandes (xl) */
+    }
+}

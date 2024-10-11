@@ -1,0 +1,48 @@
+{% extends 'sidebar.html' %}
+{% block content %}
+
+<head>
+    <title>Eafit Spaces</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/statisitcsAdmin.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class ="container_satistics_1">
+        <h4>Number of Reservations by Hour (Last 6 Months)</h4>
+        <canvas id="reservationsByHourChart" class ="reservations_by_hours"></canvas>
+    </div>
+
+    <div class ="container_satistics_2">
+        <h4>Number of Reservations by Block (Last 6 Months)</h4>
+        <canvas id="reservationsByBuildingChart" class ="reservationsByBuildingChart"></canvas>
+    </div>
+
+    <div class="collapse_containr_1">
+        <p class="d-inline-flex gap-1" id="collapse_button">
+            <a class="btn btn-primary w-100 w-md-auto text-center responsive-text" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                Analyze data
+            </a>
+        </p>
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body" id="card_text">
+                Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+            </div>
+        </div>
+    </div>
+    
+
+
+
+
+    {% load static %}
+    <script type="application/json" id="chart-hours">{{ hours|safe }}</script>
+    <script type="application/json" id="chart-counts">{{ counts|safe }}</script>
+    
+    <script type="application/json" id="chart-blocks">{{ blocks|safe }}</script>
+    <script type="application/json" id="chart2-counts">{{ counts2|safe }}</script>
+    <script src="{% static 'js/statisticsAdmin.js' %}"></script>
+    {% endblock %}
+</body>
