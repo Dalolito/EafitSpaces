@@ -1,6 +1,6 @@
 # core/forms.py
 from django import forms
-from .models import CustomUser, Reservation, Space
+from .models import CustomUser, Reservation, Space, Resource
 from datetime import date, timedelta
 
 
@@ -52,9 +52,14 @@ class ReservationForm(forms.ModelForm):
 
 
 class SpacesForm(forms.ModelForm):
+    resources = forms.ModelMultipleChoiceField(
+        queryset=Resource.objects.all(),  # Obtiene todos los recursos disponibles
+        widget=forms.CheckboxSelectMultiple(),  # Utiliza checkboxes para seleccionar múltiples recursos
+        required=False  # Permite que el campo no sea obligatorio
+    )
     class Meta:
         model = Space
-        fields = ['capacity', 'building_number', 'room_number', 'image', 'type_id', 'available', 'available_resources']
+        fields = ['capacity', 'building_number', 'room_number', 'image', 'type_id', 'resources']
         widgets = {
             'capacity': forms.NumberInput(attrs={
                 'class': 'form-control', 
@@ -79,9 +84,25 @@ class SpacesForm(forms.ModelForm):
             }),
             'type_id':  forms.Select(attrs={'class': 'form-control', 'id': 'type_input',}),
             'available': forms.HiddenInput(),
-            'available_resources': forms.Textarea(attrs={
-                'class': 'form-control', 
-                'placeholder': 'Enter Available Resources',
-                'rows': 3
-            }),
+            
         }
+
+class resourcesForm(forms.ModelForm):
+    class Meta:
+        model = Resource 
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Enter the name of the resource',
+                'id': 'resource_input',
+            }),
+        }    
+
+
+
+
+
+
+
+

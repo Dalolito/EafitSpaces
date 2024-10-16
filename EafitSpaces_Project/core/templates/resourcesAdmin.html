@@ -1,0 +1,83 @@
+{% extends 'sidebar.html' %}
+{% block content %}
+
+<head>
+    <title>Eafit Spaces</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/resourcesAdmin.css'%}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="grid-head">
+        <div class="grid-title">
+            <p><b>Resources:</b></p>
+        </div>
+    </div>
+    
+    <!-- tablas que muestran los espacios Disponibles -->
+    <div class="grid-container">
+        {% for resource in resources %}
+            {% if resource.availability %}
+                <form action="" method="get">
+                    <div class="grid-item">
+                        <input type="hidden" name="type_form" value="resources_form">
+                        <input type="hidden" name="name" value="{{ resource.name }}">
+                        <br>
+                        <div class="name">{{ resource.name }}</div>
+                        <!-- Aquí puedes agregar más campos del modelo Resource -->
+                        <br>
+                    </div>
+                </form>
+            {% endif %}
+        {% endfor %}
+    </div>
+<!-- formulario emergente cuando se hace click en agregar recursos -->
+<div class="add_resource_form" id="add_resource_form" style="display:none;">
+    <form id="resource_form" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="data" value="spaces">
+
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <!-- Botones dentro del formulario -->
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-success" id="submit-btn">Send</button>
+            <button type="button" class="btn btn-danger" id="close-btn">Close</button>
+        </div>
+    </form>
+</div>
+
+
+
+
+    <!-- boton para añadir espacios -->
+    <form action="" method="get">
+        <input type="hidden" name="type_form" value="add_resource_form">
+        <button type="button" id="add-btn" class="btn btn-primary" style="position:fixed; bottom:20px; right:20px;">+</button>
+    </form>
+
+    <!-- Mensaje de éxito al enviar el formulario -->
+    <div id="success-message" class="success-message" style="display: none;">
+        ¡Correctly added!
+    </div>
+
+    {% if errors %}
+    <div class="errorlist">
+        {% for field, error_list in errors.items %}
+            <p>{{ field }}: {{ error_list }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+
+    {% load static %}
+    <script src="{% static 'js/resourceAdminForm.js' %}"></script>
+    {% endblock %}
+</body>
+
+
+
+
