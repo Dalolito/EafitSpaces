@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
-from .models import Space, Reservation, CustomUser, SpaceType
+from .models import Space, Reservation, CustomUser, SpaceType, Resource, SpaceXResource
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegistrationForm, UserLoginForm, ReservationForm, SpacesForm
+from .forms import UserRegistrationForm, UserLoginForm, ReservationForm, SpacesForm, resourcesForm
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.http import JsonResponse
@@ -229,39 +229,47 @@ def spacesAdmin(request):
     selected_space_id = request.GET.get('space_id')
     space_type_id = request.GET.get('space_type')
     type_form = request.GET.get('type_form')
-    print("Formulario válido. Guardando datos...") 
+
     if space_type_id:
         spaces = spaces.filter(type_id=space_type_id)
-    
+
     # Verificar si el usuario está autenticado
-    user = request.user  # Obtiene el usuario autenticado
-    is_superuser = user.is_superuser  # Verifica si el usuario es un superusuario
-    
+    user = request.user
+    is_superuser = user.is_superuser
+
     if request.method == 'POST':
-        
         data = request.POST.get('data')
         if data == "reservation":
             form = ReservationForm(request.POST)
             if form.is_valid():
                 form.save()
-
+                messages.success(request, 'Reservation added successfully!')
         else:
-            form = SpacesForm(request.POST, request.FILES)  
+            form = SpacesForm(request.POST, request.FILES)
             if form.is_valid():
-                form.save()
+                space = form.save(commit=False)  # No guardar todavía para manejar los recursos
+                space.save()  # Guarda el espacio
+
+                # Manejar la relación SpaceXResource
+                resources = form.cleaned_data.get('resources')
+                for resource in resources:
+                    # Asignar la cantidad según lo que necesites (en este caso por defecto es 1)
+                    SpaceXResource.objects.create(space_id=space, resource_id=resource, quantity=1)
+                
+                messages.success(request, 'Space added successfully!')
             else:
-                print(form.errors) 
+                print(form.errors)
     else:
         if type_form == "reservation_form":
             form = ReservationForm(initial={
                 'space_id': selected_space_id,
                 'user_id': user.user_id
-                 })
+            })
         else:
             form = SpacesForm(initial={
                 'user_id': user.user_id,
-                'available':True
-                 })
+                'available': True
+            })
 
     # Obtener datos del espacio seleccionado
     peticion_data = None
@@ -273,13 +281,14 @@ def spacesAdmin(request):
 
     return render(request, 'spacesAdmin.html', {
         'spaces': spaces,
-        'space_types': space_types, 
+        'space_types': space_types,
         'is_superuser': is_superuser,
         'space_id': selected_space_id,
         'form': form,
         'peticion_data': peticion_data,
         'errors': form.errors  
-        })
+    })
+
 
 
 @login_required
@@ -375,3 +384,28 @@ def update_reservation_date(request):
             return JsonResponse({'status': 'error', 'message': 'Reservation not found.'}, status=404)
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=400)
+
+
+@login_required
+def resourcesAdmin(request):
+    resources = Resource.objects.all()  # Obtener todos los recursos
+    user = request.user
+    is_superuser = user.is_superuser  # Verificar si el usuario es superuser (administrador)
+
+    # Manejar el formulario de creación de nuevos recursos
+    if request.method == 'POST':
+        form = resourcesForm(request.POST)
+        if form.is_valid():
+            resource = form.save(commit=False)  # Guardar el nuevo recurso en la base de datos
+            resource.availability = True
+            resource.save()
+            messages.success(request, 'Resource added successfully!')
+            return redirect('resourcesAdmin')  # Redirigir a la página de administración de recursos
+    else:
+        form = resourcesForm()  # Formulario vacío para agregar un nuevo recurso
+    
+    return render(request, 'resourcesAdmin.html', {
+        'resources': resources,
+        'is_superuser': is_superuser,
+        'form': form  # Pasar el formulario a la plantilla
+    })

@@ -36,6 +36,7 @@ urlpatterns = [
     path('update_reservation_date/', Views.update_reservation_date, name='update_reservation_date'),
     path('get-available-hours/', Views.get_available_hours, name='get_available_hours'),
     path('statisticsAdmin/', Views.statisticsAdmin, name='statisticsAdmin'),
+    path('resourcesAdmin/', Views.resourcesAdmin, name='resourcesAdmin'),
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

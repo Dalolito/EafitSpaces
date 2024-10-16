@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils import timezone
 
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, username=None, full_name=None, role=None):
         if not email:
@@ -43,8 +44,15 @@ class SpaceType(models.Model):
     
     def __str__(self):
         return self.type_name
+# Resource
+class Resource(models.Model):
+    resource_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50)
+    availability = models.BooleanField()
 
-# Space
+    def __str__(self):
+        return self.name
+    
 class Space(models.Model):
     space_id = models.AutoField(primary_key=True)
     capacity = models.IntegerField()
@@ -53,10 +61,22 @@ class Space(models.Model):
     image = models.ImageField(upload_to='core/images/')
     type_id = models.ForeignKey(SpaceType, on_delete=models.CASCADE)
     available = models.BooleanField(default=True)
-    available_resources = models.CharField(max_length=255)
+    resources = models.ManyToManyField(Resource, through='SpaceXResource', related_name='spaces')
     
     def __str__(self):
         return str(self.building_number) + " - " +str(self.room_number)
+
+class SpaceXResource(models.Model):
+    space_id = models.ForeignKey(Space, on_delete=models.CASCADE)  # Llave foránea a Space
+    resource_id = models.ForeignKey(Resource, on_delete=models.CASCADE)  # Llave foránea a Resource
+    quantity = models.IntegerField()  
+    
+    class Meta:
+        unique_together = ('space_id', 'resource_id')  # Para evitar duplicaciones en la combinación espacio-recurso
+    
+    def __str__(self):
+        return f"Space: {self.space_id} - Resource: {self.resource_id} - Quantity: {self.quantity}"    
+# Space
 
 # Reservation
 class Reservation(models.Model):
@@ -76,11 +96,7 @@ class Reservation(models.Model):
     def __str__(self):
         return f"Reserva desde {self.start_time} hasta {self.end_time}"
 
-# Resource
-class Resource(models.Model):
-    resource_id = models.AutoField(primary_key=True)
-    type = models.CharField(max_length=50)
-    availability = models.BooleanField()
+
 
 # Notifications
 class Notifications(models.Model):
