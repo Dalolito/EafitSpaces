@@ -11,28 +11,31 @@
 
 <body>
     <div class ="container_satistics_1">
-        <h4>Number of Reservations by Hour (Last 6 Months)</h4>
+        <h5 style="text-align: center;">Number of Reservations by Hour (Last 6 Months)</h5>
         <canvas id="reservationsByHourChart" class ="reservations_by_hours"></canvas>
+
+
+        <div class="collapse_containr_1">
+            <p class="d-inline-flex gap-1" id="collapse_button">
+                <a class="btn btn-primary w-100 w-md-auto text-center responsive-text" id = "collapse_button" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    Analyze data
+                </a>
+            </p>
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body" id="card_text">
+                    Data analysis through artificial intelligence
+                </div>
+            </div>
+        </div>
+
+
     </div>
 
     <div class ="container_satistics_2">
-        <h4>Number of Reservations by Block (Last 6 Months)</h4>
+        <h5>Number of Reservations by Block (Last 6 Months)</h5>
         <canvas id="reservationsByBuildingChart" class ="reservationsByBuildingChart"></canvas>
     </div>
 
-    <div class="collapse_containr_1">
-        <p class="d-inline-flex gap-1" id="collapse_button">
-            <a class="btn btn-primary w-100 w-md-auto text-center responsive-text" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                Analyze data
-            </a>
-        </p>
-        <div class="collapse" id="collapseExample">
-            <div class="card card-body" id="card_text">
-                Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
-            </div>
-        </div>
-    </div>
-    
 
 
 
