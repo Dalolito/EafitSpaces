@@ -73,13 +73,21 @@
                     <img src="{{ peticion_data.image.url }}" class="image_reservation" alt="Imagen del espacio">
                     <div class="information">
                         <b><p>Resources:</p></b>
-                        {{ peticion_data.available_resources }}
-                    </div>
-                    <div id="confirmation_message" style="display: none;">
-                        <p>Your reservation has been confirmed!</p>
-                    </div>
-                    <img id="image_confirmation" src="{% static 'img/image_confirmation.png' %}" class="image_confirmation" alt="Imagen de confirmacion" style="display: none;">
-                </div>
+        {% if available_resources %}
+            <ul>
+                {% for resource in available_resources %}
+                    <li>{{ resource }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No resources available.</p>
+        {% endif %}
+    </div>
+    <div id="confirmation_message" style="display: none;">
+        <p>Your reservation has been confirmed!</p>
+    </div>
+    <img id="image_confirmation" src="{% static 'img/image_confirmation.png' %}" class="image_confirmation" alt="Imagen de confirmacion" style="display: none;">
+</div>
             </div>
         </div>
 

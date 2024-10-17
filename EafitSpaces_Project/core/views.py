@@ -123,11 +123,18 @@ def home(request):
     user = request.user
     is_superuser = user.is_superuser
     available_hours = []
+    peticion_data = None
+    available_resources = None
 
     if selected_space_id:
         # Obtener todas las horas reservadas para el espacio seleccionado
+        peticion_data = Space.objects.get(space_id=selected_space_id)
         reservas = Reservation.objects.filter(space_id=selected_space_id)
-        
+        resources = SpaceXResource.objects.filter(space_id=selected_space_id)
+        available_resources = [
+            f"{resource.resource_id.name} (Cantidad: {resource.quantity})"
+            for resource in resources
+        ]
         # Todas las horas posibles
         all_times = [
             ('06:00', '06:00 AM'), ('06:30', '06:30 AM'), 
@@ -198,7 +205,8 @@ def home(request):
         'space_id': selected_space_id,
         'form': form,
         'peticion_data': peticion_data,
-        'available_hours': available_hours_json  # Pasar las horas disponibles como JSON al template
+        'available_hours': available_hours_json,  # Pasar las horas disponibles como JSON al template
+        'available_resources': available_resources
     })
 
 
