@@ -359,23 +359,26 @@ def reservationHistory(request):
     'reservations': reservations
     })
 
-def prueba(request):
-    if request.method == 'POST':
-        form = ReservationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('success_url')  # Redirige a una URL de éxito después de guardar
-    else:
-        form = ReservationForm()
-    
-    return render(request, 'prueba.html', {'form': form})
-
 @login_required
-def cancel_reservation(request, reservation_id):
+def delete_reservation(request, reservation_id):
     reservation = get_object_or_404(Reservation, reservation_id=reservation_id)
     reservation.delete()
-    messages.success(request, 'Reservation cancelled successfully.')
+    messages.success(request, 'Reservation deleted successfully.')
     return redirect('reservationsAdmin')
+
+@csrf_exempt
+def cancel_reservation(request):
+    if request.method == 'POST':
+        reservation_id = request.POST.get('reservation_id')
+        
+        try:
+            reservation = Reservation.objects.get(reservation_id=reservation_id)
+            reservation.status = 'Cancel'
+            reservation.save()
+            return JsonResponse({'success': True})
+        except Reservation.DoesNotExist:
+            return JsonResponse({'error': 'Reservation not found'}, status=404)
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 @csrf_exempt
 def update_reservation_date(request):

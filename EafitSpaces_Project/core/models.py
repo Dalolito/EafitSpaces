@@ -90,6 +90,7 @@ class Reservation(models.Model):
     STATUS_CHOICES = [
         ('Close', 'Close'),
         ('Available', 'Available'),
+        ('Cancel', 'Cancel')
     ]
     
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Available')
