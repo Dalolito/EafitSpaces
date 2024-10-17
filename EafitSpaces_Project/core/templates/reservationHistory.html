@@ -22,6 +22,7 @@
                 <tr>
 
                     <th scope="col">Reservation Date</th>
+                    <th scope="col">Space</th>
                     <th scope="col">Start Time</th>
                     <th scope="col">End Time</th>
                     <th scope="col">Status</th>
@@ -32,12 +33,11 @@
             <tbody>
                 {% for reservation in reservations %}
                 <tr>
-
                     <td>{{ reservation.reservation_date }}</td>
+                    <td>{{ reservation.space_id }}</td>
                     <td>{{ reservation.start_time }}</td>
                     <td>{{ reservation.end_time }}</td>
                     <td>{{ reservation.status }}</td>
-
                     <td>
                         <a href="javascript:void(0);" class="text-warning" onclick="cancelReservation('{{ reservation.reservation_id }}')">
                             <i class="fas fa-times-circle"></i>
@@ -64,7 +64,9 @@
                     },
                     success: function(response) {
                         alert('Reservation cancelled successfully!');
-                        location.reload();  // Recargar la página para reflejar los cambios
+                        // Oculta los botones de la fila correspondiente
+                        $('#reservation-row-' + reservationId + ' td:last-child').html('');
+                        location.reload();
                     },
                     error: function(response) {
                         alert('An error occurred while cancelling the reservation.');

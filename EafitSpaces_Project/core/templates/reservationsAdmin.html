@@ -130,7 +130,9 @@
                     },
                     success: function(response) {
                         alert('Reservation cancelled successfully!');
-                        location.reload();  // Recargar la página para reflejar los cambios
+                        // Oculta los botones de la fila correspondiente
+                        $('#reservation-row-' + reservationId + ' td:last-child').html('');
+                        location.reload();
                     },
                     error: function(response) {
                         alert('An error occurred while cancelling the reservation.');

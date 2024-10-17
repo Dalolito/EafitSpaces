@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Space, Reservation, CustomUser, SpaceType, Resource, SpaceXResource
+from .models import *
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -353,7 +353,7 @@ def statisticsAdmin(request):
 def reservationHistory(request):
     user = request.user 
     id_user = user.user_id
-    reservations = Reservation.objects.all()
+    reservations = Reservation.objects.all().order_by('-reservation_id')
     reservations = reservations.filter(user_id=id_user)
     return render(request,'reservationHistory.html',{
     'reservations': reservations
@@ -420,6 +420,33 @@ def resourcesAdmin(request):
         'is_superuser': is_superuser,
         'form': form  # Pasar el formulario a la plantilla
     })
-    
+
+@login_required
+def create_reservation(request):
+    if request.method == 'POST':
+        form = ReservationForm(request.POST)
+        if form.is_valid():
+            reservation = form.save(commit=False)
+            reservation.user_id = request.user
+            reservation.save()
+
+            # Crear una notificación cuando se crea una reserva
+            Notifications.objects.create(
+                user_id=request.user,
+                message=f"A new reservation has been created for the space {reservation.space_id}",
+                reservation=reservation
+            )
+            return redirect('home')
+    else:
+        form = ReservationForm()
+    return render(request, 'reservation_form.html', {'form': form})
+
+@login_required
 def notifications(request):
-    return render(request, 'notifications.html')
+    user_notifications = Notifications.objects.filter(user_id=request.user).order_by('-date_time')
+
+    # Marcar todas las notificaciones como leídas
+    user_notifications.update(is_read=True)
+
+    return render(request, 'notifications.html', {'notifications': user_notifications})
+
