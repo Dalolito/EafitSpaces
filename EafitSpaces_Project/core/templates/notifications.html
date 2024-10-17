@@ -26,6 +26,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ notification.message }}</h5>
                         <p class="card-text"><small class="text-muted">{{ notification.date_time|date:"d/m/Y H:i" }}</small></p>
+                        <!--
                         {% if notification.reservation %}
                             {% if notification.reservation.status == "Cancel" %}
                                 <span class="badge badge-danger">Cancel</span>
@@ -33,6 +34,7 @@
                                 <span class="badge badge-success">Available</span>
                             {% endif %}
                         {% endif %}
+                        -->
                     </div>
                 </div>
                 {% empty %}
