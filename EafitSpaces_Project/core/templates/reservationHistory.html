@@ -38,11 +38,14 @@
                     <td>{{ reservation.start_time }}</td>
                     <td>{{ reservation.end_time }}</td>
                     <td>{{ reservation.status }}</td>
+
+                    {% if reservation.status == "Available"%}
                     <td>
                         <a href="javascript:void(0);" class="text-warning" onclick="cancelReservation('{{ reservation.reservation_id }}')">
                             <i class="fas fa-times-circle"></i>
                         </a>
                     </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>

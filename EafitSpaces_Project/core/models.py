@@ -94,17 +94,19 @@ class Reservation(models.Model):
     
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Available')
 
-    # Variable interna para almacenar el estado anterior
+    # Variables internas para almacenar el estado y la fecha anteriores
     _previous_status = None
+    _previous_date = None
 
     def __str__(self):
         return f"Reserva desde {self.start_time} hasta {self.end_time}"
 
     def save(self, *args, **kwargs):
-        # Si la instancia ya existe (no es una nueva) obtenemos el estado previo
+        # Si la instancia ya existe (no es una nueva) obtenemos el estado y la fecha previos
         if self.pk:
             previous_reservation = Reservation.objects.get(pk=self.pk)
             self._previous_status = previous_reservation.status
+            self._previous_date = previous_reservation.reservation_date
         
         super().save(*args, **kwargs)  # Guardamos la instancia
 
@@ -113,7 +115,16 @@ class Reservation(models.Model):
             # Crear una nueva notificación con el ID del espacio
             Notifications.objects.create(
                 user_id=self.user_id,
-                message=f"The status of your reservation for space ID {self.space_id} has changed to {self.status}.",
+                message=f"The status of your reservation for space {self.space_id} has changed to {self.status}.",
+                reservation=self
+            )
+        
+        # Verificar si la fecha ha cambiado
+        if self._previous_date and self._previous_date != self.reservation_date:
+            # Crear una nueva notificación para el cambio de fecha
+            Notifications.objects.create(
+                user_id=self.user_id,
+                message=f"The date of your reservation for space {self.space_id} has changed to {self.reservation_date}.",
                 reservation=self
             )
 
