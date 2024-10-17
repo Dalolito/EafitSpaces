@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Space, Reservation, CustomUser, SpaceType, Resource, SpaceXResource
+from .models import *
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -123,11 +123,18 @@ def home(request):
     user = request.user
     is_superuser = user.is_superuser
     available_hours = []
+    peticion_data = None
+    available_resources = None
 
     if selected_space_id:
         # Obtener todas las horas reservadas para el espacio seleccionado
+        peticion_data = Space.objects.get(space_id=selected_space_id)
         reservas = Reservation.objects.filter(space_id=selected_space_id)
-        
+        resources = SpaceXResource.objects.filter(space_id=selected_space_id)
+        available_resources = [
+            f"{resource.resource_id.name} (Cantidad: {resource.quantity})"
+            for resource in resources
+        ]
         # Todas las horas posibles
         all_times = [
             ('06:00', '06:00 AM'), ('06:30', '06:30 AM'), 
@@ -198,7 +205,8 @@ def home(request):
         'space_id': selected_space_id,
         'form': form,
         'peticion_data': peticion_data,
-        'available_hours': available_hours_json  # Pasar las horas disponibles como JSON al template
+        'available_hours': available_hours_json,  # Pasar las horas disponibles como JSON al template
+        'available_resources': available_resources
     })
 
 
@@ -345,29 +353,32 @@ def statisticsAdmin(request):
 def reservationHistory(request):
     user = request.user 
     id_user = user.user_id
-    reservations = Reservation.objects.all()
+    reservations = Reservation.objects.all().order_by('-reservation_id')
     reservations = reservations.filter(user_id=id_user)
     return render(request,'reservationHistory.html',{
     'reservations': reservations
     })
 
-def prueba(request):
-    if request.method == 'POST':
-        form = ReservationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('success_url')  # Redirige a una URL de éxito después de guardar
-    else:
-        form = ReservationForm()
-    
-    return render(request, 'prueba.html', {'form': form})
-
 @login_required
-def cancel_reservation(request, reservation_id):
+def delete_reservation(request, reservation_id):
     reservation = get_object_or_404(Reservation, reservation_id=reservation_id)
     reservation.delete()
-    messages.success(request, 'Reservation cancelled successfully.')
+    messages.success(request, 'Reservation deleted successfully.')
     return redirect('reservationsAdmin')
+
+@csrf_exempt
+def cancel_reservation(request):
+    if request.method == 'POST':
+        reservation_id = request.POST.get('reservation_id')
+        
+        try:
+            reservation = Reservation.objects.get(reservation_id=reservation_id)
+            reservation.status = 'Cancel'
+            reservation.save()
+            return JsonResponse({'success': True})
+        except Reservation.DoesNotExist:
+            return JsonResponse({'error': 'Reservation not found'}, status=404)
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 @csrf_exempt
 def update_reservation_date(request):
@@ -409,3 +420,33 @@ def resourcesAdmin(request):
         'is_superuser': is_superuser,
         'form': form  # Pasar el formulario a la plantilla
     })
+
+@login_required
+def create_reservation(request):
+    if request.method == 'POST':
+        form = ReservationForm(request.POST)
+        if form.is_valid():
+            reservation = form.save(commit=False)
+            reservation.user_id = request.user
+            reservation.save()
+
+            # Crear una notificación cuando se crea una reserva
+            Notifications.objects.create(
+                user_id=request.user,
+                message=f"A new reservation has been created for the space {reservation.space_id}",
+                reservation=reservation
+            )
+            return redirect('home')
+    else:
+        form = ReservationForm()
+    return render(request, 'reservation_form.html', {'form': form})
+
+@login_required
+def notifications(request):
+    user_notifications = Notifications.objects.filter(user_id=request.user).order_by('-date_time')
+
+    # Marcar todas las notificaciones como leídas
+    user_notifications.update(is_read=True)
+
+    return render(request, 'notifications.html', {'notifications': user_notifications})
+

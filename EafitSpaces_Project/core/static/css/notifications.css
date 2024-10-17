@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.grid-title {
+    display: grid;
+    gap: 2%; 
+    font-size: 26px;
+    margin-top: 15px;
+}
+
+.grid-head {
+    display: flex; /* Habilita el modelo Flexbox */
+    align-items: center; /* Alinea verticalmente en el centro */
+    justify-content: space-between; /* Espacio entre los elementos */
+    padding: 0.5%; /* Espacio alrededor del contenedor */
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 2%;
+}
+
+.notification-card {
+    margin-bottom: 15px;
+    border-left: 5px solid #007bff; /* Borde azul en el lado izquierdo */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+    transition: background-color 0.3s ease; /* Transición suave en el cambio de fondo */
+}
+
+.notification-card.unread {
+    background-color: #f8f9fa; /* Fondo claro para no leídas */
+}
+
+.notification-card.read {
+    background-color: #ffffff; /* Fondo blanco para leídas */
+}
+
+.notification-card .card-body {
+    padding: 15px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.card-text {
+    margin-bottom: 10px;
+}
+
+.badge {
+    font-size: 0.9rem; /* Ajusta el tamaño de la fuente de la insignia */
+    padding: 0.5em; /* Agrega padding para que se vea mejor */
+    border-radius: 0.25rem; /* Bordes redondeados */
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.badge-success {
+    background-color: #28a745;
+    color: #fff; /* Asegúrate de que el texto sea legible */
+}
+
+.badge-danger {
+    background-color: #dc3545; /* Color rojo para cancelado */
+    color: #fff; /* Asegúrate de que el texto sea legible */
+}
+
+.alert {
+    font-size: 1.2rem;
+    font-weight: bold;
+}

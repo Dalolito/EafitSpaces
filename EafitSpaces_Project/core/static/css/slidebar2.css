@@ -194,6 +194,7 @@ a.sidebar-link:hover {
     transition: all .2s ease-out;
 }
 .favicon{
-    max-width: 20%;
-    height: 20%;
+    left: -40%;
+    max-width: 160%;
+    height: 160%;
 }

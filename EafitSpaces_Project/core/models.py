@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils import timezone
 
-
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, username=None, full_name=None, role=None):
         if not email:
@@ -86,25 +85,59 @@ class Reservation(models.Model):
     reservation_date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
-    
+
     STATUS_CHOICES = [
         ('Close', 'Close'),
         ('Available', 'Available'),
+        ('Cancel', 'Cancel')
     ]
     
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Available')
+
+    # Variables internas para almacenar el estado y la fecha anteriores
+    _previous_status = None
+    _previous_date = None
+
     def __str__(self):
         return f"Reserva desde {self.start_time} hasta {self.end_time}"
 
+    def save(self, *args, **kwargs):
+        # Si la instancia ya existe (no es una nueva) obtenemos el estado y la fecha previos
+        if self.pk:
+            previous_reservation = Reservation.objects.get(pk=self.pk)
+            self._previous_status = previous_reservation.status
+            self._previous_date = previous_reservation.reservation_date
+        
+        super().save(*args, **kwargs)  # Guardamos la instancia
 
+        # Verificar si el estado ha cambiado
+        if self._previous_status and self._previous_status != self.status:
+            # Crear una nueva notificación con el ID del espacio
+            Notifications.objects.create(
+                user_id=self.user_id,
+                message=f"The status of your reservation for space {self.space_id} has changed to {self.status}.",
+                reservation=self
+            )
+        
+        # Verificar si la fecha ha cambiado
+        if self._previous_date and self._previous_date != self.reservation_date:
+            # Crear una nueva notificación para el cambio de fecha
+            Notifications.objects.create(
+                user_id=self.user_id,
+                message=f"The date of your reservation for space {self.space_id} has changed to {self.reservation_date}.",
+                reservation=self
+            )
 
-# Notifications
 class Notifications(models.Model):
     notification_id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)
-    date_time = models.DateTimeField()
-    message = models.CharField(max_length=300)
+    message = models.TextField()
+    date_time = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+    reservation = models.ForeignKey('Reservation', on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return f"Notification for {self.user_id}"
 
 # Reports
 class Reports(models.Model):

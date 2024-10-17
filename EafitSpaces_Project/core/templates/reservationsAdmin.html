@@ -41,12 +41,21 @@
                     <td>{{ reservation.end_time }}</td>
                     <td>{{ reservation.status }}</td>
                     <td>
-                        <a href="javascript:void(0);" class="text-primary" onclick="openEditModal('{{ reservation.reservation_id }}', '{{ reservation.reservation_date }}')">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a href="javascript:void(0);" class="text-danger" onclick="confirmDelete('{{ reservation.reservation_id }}')">
-                            <i class="fas fa-trash-alt"></i>
-                        </a>
+                        {% if reservation.status == "Available"%}
+                            <a href="javascript:void(0);" class="text-primary" onclick="openEditModal('{{ reservation.reservation_id }}', '{{ reservation.reservation_date }}')">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="javascript:void(0);" class="text-danger" onclick="confirmDelete('{{ reservation.reservation_id }}')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                            <a href="javascript:void(0);" class="text-warning" onclick="cancelReservation('{{ reservation.reservation_id }}')">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                        {% else %}
+                            <a href="javascript:void(0);" class="text-danger" onclick="confirmDelete('{{ reservation.reservation_id }}')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
@@ -111,8 +120,30 @@
         }
 
         function confirmDelete(reservationId) {
-            if (confirm("Are you sure you want to cancel the reservation?")) {
-                window.location.href = "/cancel_reservation/" + reservationId + "/";
+            if (confirm("Are you sure you want to delete the reservation?")) {
+                window.location.href = "/delete_reservation/" + reservationId + "/";
+            }
+        }
+
+        function cancelReservation(reservationId) {
+            if (confirm("Are you sure you want to cancel this reservation?")) {
+                $.ajax({
+                    url: '/cancel_reservation/',  // La URL que manejará la solicitud en Django
+                    method: 'POST',
+                    data: {
+                        'reservation_id': reservationId,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'  // Necesario para las solicitudes POST en Django
+                    },
+                    success: function(response) {
+                        alert('Reservation cancelled successfully!');
+                        // Oculta los botones de la fila correspondiente
+                        $('#reservation-row-' + reservationId + ' td:last-child').html('');
+                        location.reload();
+                    },
+                    error: function(response) {
+                        alert('An error occurred while cancelling the reservation.');
+                    }
+                });
             }
         }
     </script>

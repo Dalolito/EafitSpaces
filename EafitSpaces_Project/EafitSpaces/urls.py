@@ -31,13 +31,13 @@ urlpatterns = [
     path('reservationsAdmin/', Views.reservationsAdmin, name='reservationsAdmin'),
     path('spacesAdmin/', Views.spacesAdmin, name='spacesAdmin'),
     path('reservationHistory/', Views.reservationHistory, name='reservationHistory'),
-    path('prueba/', Views.prueba, name='prueba'),
-    path('cancel_reservation/<int:reservation_id>/', Views.cancel_reservation, name='cancel_reservation'),
+    path('delete_reservation/<int:reservation_id>/', Views.delete_reservation, name='delete_reservation'),
     path('update_reservation_date/', Views.update_reservation_date, name='update_reservation_date'),
     path('get-available-hours/', Views.get_available_hours, name='get_available_hours'),
     path('statisticsAdmin/', Views.statisticsAdmin, name='statisticsAdmin'),
     path('resourcesAdmin/', Views.resourcesAdmin, name='resourcesAdmin'),
-
+    path('cancel_reservation/', Views.cancel_reservation, name='cancel_reservation'),
+    path('notifications/', Views.notifications, name='notifications'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
