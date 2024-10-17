@@ -420,3 +420,6 @@ def resourcesAdmin(request):
         'is_superuser': is_superuser,
         'form': form  # Pasar el formulario a la plantilla
     })
+    
+def notifications(request):
+    return render(request, 'notifications.html')

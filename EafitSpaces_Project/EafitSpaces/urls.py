@@ -37,6 +37,7 @@ urlpatterns = [
     path('statisticsAdmin/', Views.statisticsAdmin, name='statisticsAdmin'),
     path('resourcesAdmin/', Views.resourcesAdmin, name='resourcesAdmin'),
     path('cancel_reservation/', Views.cancel_reservation, name='cancel_reservation'),
+    path('notifications/', Views.notifications, name='notifications'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
