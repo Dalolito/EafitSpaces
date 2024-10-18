@@ -1,11 +1,14 @@
+<!DOCTYPE html>
+<html>
 {% extends 'sidebar.html' %}
 {% block content %}
-
 <head>
     <title>Eafit Spaces</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/resourcesAdmin.css'%}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link rel="icon" type="image/png" href="{% static 'img/logo.png' %}">
 </head>
 
 <body>
@@ -77,6 +80,7 @@
     <script src="{% static 'js/resourceAdminForm.js' %}"></script>
     {% endblock %}
 </body>
+</html>
 
 
 

@@ -21,6 +21,18 @@ body {
     box-sizing: border-box; /* Asegura que el padding y border estén incluidos en el width */
 }
 
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px; /* Espacio entre el logo y el texto */
+}
+
+.login-logo {
+    width: 100px; /* Ajusta el tamaño del logo según tus necesidades */
+    height: auto;
+    display: block;
+    margin: 0 auto; /* Para asegurar que el logo esté centrado */
+}
+
 h2 {
     color: #333333;
     margin-bottom: 30px;

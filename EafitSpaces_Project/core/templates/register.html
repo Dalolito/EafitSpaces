@@ -4,9 +4,13 @@
     <title>User Register</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/register.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'img/logo.png' %}">
 </head>
 <body>
     <div class="container">
+        <div class="logo-container">
+            <img src="{% static 'img/logo.png' %}" alt="Eafit Spaces Logo" class="login-logo">
+        </div>
         <h2>Register</h2>
         <h5>Please fill out the following information to register</h5>
         <form method="post">
