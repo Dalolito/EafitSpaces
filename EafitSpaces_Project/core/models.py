@@ -68,7 +68,7 @@ class Space(models.Model):
 class SpaceXResource(models.Model):
     space_id = models.ForeignKey(Space, on_delete=models.CASCADE)  # Llave foránea a Space
     resource_id = models.ForeignKey(Resource, on_delete=models.CASCADE)  # Llave foránea a Resource
-    quantity = models.IntegerField()  
+    quantity = models.IntegerField(null=True, blank=True)
     
     class Meta:
         unique_together = ('space_id', 'resource_id')  # Para evitar duplicaciones en la combinación espacio-recurso

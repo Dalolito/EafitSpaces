@@ -396,3 +396,30 @@ label[for="type_input"] {
 opacity: 0;
    
 }
+
+/* Para el botón de modificar */
+.btn-custom-modify {
+    background-color: #4CAF50; /* color de fondo */
+    color: white; /* color del texto */
+    border: 2px solid #388E3C; /* color y grosor del borde */
+    border-radius: 5px; /* bordes redondeados */
+}
+
+/* Para el botón de eliminar */
+.btn-custom-delete {
+    background-color: #f44336; /* color de fondo */
+    color: white; /* color del texto */
+    border: 2px solid #d32f2f; /* color y grosor del borde */
+    border-radius: 5px; /* bordes redondeados */
+}
+
+/* Cambios al pasar el cursor */
+.btn-custom-modify:hover {
+    background-color: #45a049; /* tono más oscuro para el hover */
+    border-color: #2e7d32; /* cambiar color del borde al pasar el cursor */
+}
+
+.btn-custom-delete:hover {
+    background-color: #d32f2f; /* tono más oscuro para el hover */
+    border-color: #c62828; /* cambiar color del borde al pasar el cursor */
+}

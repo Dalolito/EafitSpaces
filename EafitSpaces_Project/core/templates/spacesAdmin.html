@@ -46,8 +46,8 @@
 
                         <!-- Botones de Modificar y Eliminar solo para superusuarios -->
                         {% if is_superuser %}
-                            <a href="{% url 'modify_space' space.space_id %}" class="btn btn-warning">Modify</a>
-                            <a href="{% url 'delete_space' space.space_id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this space?');">Delete</a>
+                        <a href="{% url 'modify_space' space.space_id %}" class="btn btn-custom-modify">Modify</a>
+                        <a href="{% url 'delete_space' space.space_id %}" class="btn btn-custom-delete" onclick="return confirm('Are you sure you want to delete this space?');">Delete</a>
                         {% endif %}
                     </div>
                 </form>

@@ -455,6 +455,8 @@ def notifications(request):
 @login_required
 def modify_space(request, space_id):
     space = get_object_or_404(Space, space_id=space_id)
+    user = request.user
+    is_superuser = user.is_superuser
     
     if request.method == 'POST':
         form = SpacesForm(request.POST, request.FILES, instance=space)
@@ -465,7 +467,12 @@ def modify_space(request, space_id):
     else:
         form = SpacesForm(instance=space)
     
-    return render(request, 'modify_space.html', {'form': form, 'space': space})
+    return render(request, 'modify_space.html', {
+        'form': form,
+        'is_superuser': is_superuser,
+        'space': space,
+
+    })
 
 # Vista para eliminar un espacio
 @login_required
