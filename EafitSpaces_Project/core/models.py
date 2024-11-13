@@ -145,3 +145,4 @@ class Reports(models.Model):
     report_pdf = models.FileField()
     user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     report_date = models.DateField()
+    range_type = models.IntegerField()

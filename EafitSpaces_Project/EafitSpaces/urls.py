@@ -35,6 +35,7 @@ urlpatterns = [
     path('update_reservation_date/', Views.update_reservation_date, name='update_reservation_date'),
     path('get-available-hours/', Views.get_available_hours, name='get_available_hours'),
     path('statisticsAdmin/', Views.statisticsAdmin, name='statisticsAdmin'),
+    path('generate_report/', Views.generate_report, name='generate_report'),
     path('resourcesAdmin/', Views.resourcesAdmin, name='resourcesAdmin'),
     path('cancel_reservation/', Views.cancel_reservation, name='cancel_reservation'),
     path('notifications/', Views.notifications, name='notifications'),

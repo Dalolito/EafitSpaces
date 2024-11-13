@@ -73,3 +73,12 @@ body {
     background-color: #f1f1f1;
     padding: 10px;        /* Padding interno para el contenido del colapso */
 }
+#generate_report_container{
+    position: absolute;
+    top: 80%;
+    width: 90%;
+}
+#user_reports_container{
+    position: absolute;
+    top: 110%;
+}

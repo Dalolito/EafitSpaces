@@ -8,12 +8,24 @@ from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from datetime import datetime
 import json
 from django.utils import timezone
 from datetime import timedelta
 from collections import Counter
 from django.db.models import Count
+from reportlab.pdfgen import canvas
+import io
+import os
+import matplotlib.pyplot as plt
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import Image
+from django.conf import settings
+import tempfile
+from django.utils.timezone import make_aware
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
+from django.db.models import Count
+from django.utils import timezone
 
 def register(request):
     if request.user.is_authenticated:
@@ -301,6 +313,8 @@ def spacesAdmin(request):
 
 @login_required
 def statisticsAdmin(request):
+    user = request.user 
+    id_user = user.user_id
     # Calcular la fecha de hace 6 meses desde hoy
     six_months_ago = timezone.now() - timedelta(days=180)
     
@@ -324,9 +338,6 @@ def statisticsAdmin(request):
     hours = list(hours_count.keys())
     counts = list(hours_count.values())
 
-
-    reservations = Reservation.objects.filter(reservation_date__gte=six_months_ago)
-
     # Agrupar las reservas por el número de edificio (building_number) y contar cuántas hay para cada uno
     reservations_count = (
         reservations.values('space_id__building_number')
@@ -338,16 +349,22 @@ def statisticsAdmin(request):
     blocks = [item['space_id__building_number'] for item in reservations_count]
     counts2 = [item['total'] for item in reservations_count]
 
+    # Obtener los reportes generados por el usuario
+    user_reports = Reports.objects.filter(user_id=request.user).order_by('-report_date')
+    print(user_reports)
+
     # Verificar si el usuario está autenticado
     user = request.user  # Obtiene el usuario autenticado
     is_superuser = user.is_superuser  # Verifica si el usuario es un superusuario
+
     return render(request, 'statisticsAdmin.html', {
         'hours': hours,
         'counts': counts,
         'is_superuser': is_superuser,
         'blocks': blocks,
         'counts2': counts2,
-        })
+        'user_reports': user_reports,
+    })
 
 @login_required
 def reservationHistory(request):
@@ -482,3 +499,231 @@ def delete_space(request, space_id):
     messages.success(request, 'Space deleted successfully!')
     return redirect('spacesAdmin')  # Redirigir a la vista de administración de espacios
 
+@login_required
+def generate_report(request):
+    if request.method == 'POST':
+        user = request.user
+        # Obtener el rango seleccionado por el usuario
+        report_range = request.POST.get('report_range')
+        today = timezone.now().date()
+        
+        # Definir la fecha inicial en función del rango seleccionado
+        if report_range == '1':  # Últimos 30 días
+            start_date = today - timedelta(days=30)
+        elif report_range == '2':  # Últimos 3 meses
+            start_date = today - timedelta(days=90)
+        elif report_range == '3':  # Último año
+            start_date = today - timedelta(days=365)
+        else:
+            start_date = today - timedelta(days=30)  # Valor por defecto
+
+        # Hacer que la fecha de inicio sea "aware" (con zona horaria)
+        start_date = make_aware(datetime.combine(start_date, datetime.min.time()))
+
+        # Filtrar las reservas de acuerdo con el rango de fechas seleccionado
+        reservations = Reservation.objects.filter(reservation_date__gte=start_date)
+
+        # Número total de reservas
+        total_reservations = reservations.count()
+
+        # Contar el número de reservas por bloque
+        reservations_by_block = reservations.values('space_id__building_number').annotate(count=Count('space_id')).order_by('-count')
+
+        # Contar el número de reservas por hora (6 AM a 10 PM)
+        reservations_by_hour = {hour: 0 for hour in range(6, 23)}
+        for reservation in reservations:
+            start_hour = reservation.start_time.hour
+            end_hour = reservation.end_time.hour
+            for hour in range(max(6, start_hour), min(23, end_hour) + 1):
+                reservations_by_hour[hour] += 1
+
+        # Salones más pedidos
+        most_requested_spaces = reservations.values('space_id__room_number').annotate(count=Count('space_id')).order_by('-count')[:5]
+
+        # Horas de más reservas
+        most_reserved_hours = sorted(reservations_by_hour.items(), key=lambda x: x[1], reverse=True)[:3]
+
+        # Bloques de más reservas
+        most_reserved_blocks = sorted(reservations_by_block, key=lambda x: x['count'], reverse=True)[:3]
+
+        # Recomendación del sistema (basada en la hora más concurrida)
+        recommendation = ""
+        if most_reserved_hours:
+            recommendation = f"Recommendation: Increase cleaning frequency at {most_reserved_hours[0][0]}:00 due to high demand."
+
+        # Crear un buffer para almacenar el contenido del PDF
+        buffer = io.BytesIO()
+
+        # Crear un objeto canvas con reportlab
+        pdf = canvas.Canvas(buffer, pagesize=letter)
+        width, height = letter
+        y_position = height - 50
+
+        # Añadir el logo al PDF (centrado)
+        logo_path = os.path.join(settings.BASE_DIR, 'core/static/img/logo.png')
+        if os.path.exists(logo_path):
+            try:
+                logo_width, logo_height = 100, 100
+                x_position = (width - logo_width) / 2  # Centrar el logo horizontalmente
+                pdf.drawImage(logo_path, x=x_position, y=height - 150, width=logo_width, height=logo_height, preserveAspectRatio=True, mask='auto')
+                y_position -= 120
+            except Exception as e:
+                print(f"Error al añadir el logo: {e}")
+
+        # Añadir el título del reporte
+        pdf.setFont("Helvetica-Bold", 18)
+        pdf.drawString(200, y_position, "Reservation Report")
+        y_position -= 40
+
+        # Añadir el número total de reservas
+        pdf.setFont("Helvetica", 14)
+        pdf.drawString(50, y_position, f"Total Reservations for Selected Period: {total_reservations}")
+        y_position -= 20
+        pdf.drawString(50, y_position, f"Generated on: {today}")
+        y_position -= 40
+
+        # Añadir el título de la sección: Número de reservas por bloque
+        pdf.setFont("Helvetica-Bold", 14)
+        pdf.drawString(50, y_position, "Reservations by Block:")
+        y_position -= 20
+
+        # Añadir los datos de reservas por bloque
+        pdf.setFont("Helvetica", 12)
+        for block in reservations_by_block:
+            pdf.drawString(50, y_position, f"Block {block['space_id__building_number']}: {block['count']} reservations")
+            y_position -= 20
+            if y_position < 50:
+                pdf.showPage()
+                y_position = height - 50
+
+        # Añadir el título de la sección: Reservas por hora
+        pdf.setFont("Helvetica-Bold", 14)
+        pdf.drawString(50, y_position, "Reservations by Hour:")
+        y_position -= 20
+
+        # Añadir los datos de reservas por hora
+        pdf.setFont("Helvetica", 12)
+        for hour, count in reservations_by_hour.items():
+            pdf.drawString(50, y_position, f"{hour}:00 - {count} reservations")
+            y_position -= 20
+            if y_position < 50:
+                pdf.showPage()
+                y_position = height - 50
+
+        # Añadir el título de la sección: Salones más pedidos
+        pdf.setFont("Helvetica-Bold", 14)
+        pdf.drawString(50, y_position, "Most Requested Rooms:")
+        y_position -= 20
+
+        # Añadir los datos de los salones más pedidos
+        pdf.setFont("Helvetica", 12)
+        for space in most_requested_spaces:
+            pdf.drawString(50, y_position, f"Room {space['space_id__room_number']}: {space['count']} reservations")
+            y_position -= 20
+            if y_position < 50:
+                pdf.showPage()
+                y_position = height - 50
+
+        # Añadir el título de la sección: Horas con más reservas
+        pdf.setFont("Helvetica-Bold", 14)
+        pdf.drawString(50, y_position, "Most Reserved Hours:")
+        y_position -= 20
+
+        # Añadir los datos de las horas con más reservas
+        pdf.setFont("Helvetica", 12)
+        for hour, count in most_reserved_hours:
+            pdf.drawString(50, y_position, f"{hour}:00 - {count} reservations")
+            y_position -= 20
+            if y_position < 50:
+                pdf.showPage()
+                y_position = height - 50
+
+        # Añadir el título de la sección: Bloques con más reservas
+        pdf.setFont("Helvetica-Bold", 14)
+        pdf.drawString(50, y_position, "Most Reserved Blocks:")
+        y_position -= 20
+
+        # Añadir los datos de los bloques con más reservas
+        pdf.setFont("Helvetica", 12)
+        for block in most_reserved_blocks:
+            pdf.drawString(50, y_position, f"Block {block['space_id__building_number']}: {block['count']} reservations")
+            y_position -= 20
+            if y_position < 50:
+                pdf.showPage()
+                y_position = height - 50
+
+        # Añadir la recomendación del sistema
+        pdf.setFont("Helvetica-Bold", 14)
+        pdf.drawString(50, y_position, "System Recommendation:")
+        y_position -= 20
+        pdf.setFont("Helvetica", 12)
+        pdf.drawString(50, y_position, recommendation)
+        y_position -= 40
+        if y_position < 50:
+            pdf.showPage()
+            y_position = height - 50
+
+        # Crear gráficos adicionales para el reporte
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmpfile:
+            # Generar el gráfico de reservas por hora
+            fig, ax = plt.subplots()
+            ax.bar(reservations_by_hour.keys(), reservations_by_hour.values(), color='skyblue')
+            ax.set_title('Reservations by Hour')
+            ax.set_xlabel('Hour of the Day')
+            ax.set_ylabel('Number of Reservations')
+            ax.set_xticks(list(reservations_by_hour.keys()))
+            plt.savefig(tmpfile.name, format='png')
+            plt.close(fig)
+
+            # Añadir el gráfico al PDF
+            if y_position < 300:
+                pdf.showPage()
+                y_position = height - 50
+
+            pdf.drawImage(tmpfile.name, x=50, y=y_position - 300, width=500, height=250)
+            y_position -= 350
+
+        # Crear gráfico de tipo pastel de reservas por bloque
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmpfile_pie:
+            fig, ax = plt.subplots()
+            labels = [f"Block {block['space_id__building_number']}" for block in reservations_by_block]
+            sizes = [block['count'] for block in reservations_by_block]
+            ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
+            ax.axis('equal')  # Para asegurar que el gráfico sea un círculo.
+            plt.title("Reservations by Block")
+            plt.savefig(tmpfile_pie.name, format='png')
+            plt.close(fig)
+
+            # Añadir el gráfico de pastel al PDF
+            if y_position < 300:
+                pdf.showPage()
+                y_position = height - 50
+
+            pdf.drawImage(tmpfile_pie.name, x=50, y=y_position - 300, width=500, height=250)
+            y_position -= 350
+
+        # Guardar el PDF y cerrar el objeto canvas
+        pdf.save()
+
+        # Obtener el archivo PDF desde el buffer
+        buffer.seek(0)
+
+        # Crear un objeto Report para almacenar el reporte en la base de datos
+        report = Reports(
+            user_id=request.user,  # Utilizando la instancia del usuario autenticado
+            report_date=today,
+            range_type=int(report_range)
+        )
+        
+        # Guardar el archivo PDF en el campo report_pdf del modelo
+        report.report_pdf.save(f"reservation_report_{today}.pdf", buffer, save=True)
+
+        # Eliminar los archivos temporales después de usarlos
+        os.remove(tmpfile.name)
+        os.remove(tmpfile_pie.name)
+
+        # Redirigir a la página de estadísticas con un mensaje de éxito (puede personalizarse)
+        return redirect('statisticsAdmin')
+
+    # Si no es POST, redirigir a la página de estadísticas
+    return redirect('statisticsAdmin')

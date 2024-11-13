@@ -36,9 +36,68 @@
         <h5>Number of Reservations by Block (Last 6 Months)</h5>
         <canvas id="reservationsByBuildingChart" class ="reservationsByBuildingChart"></canvas>
     </div>
+    
+        <!-- Formulario para seleccionar el rango y generar reporte -->
+    <div class="container mt-4" id = "generate_report_container">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Generate Reservation Report</h5>
+                <form method="post" action="{% url 'generate_report' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="report-range">Select Time Range:</label>
+                        <select class="form-control" id="report-range" name="report_range">
+                            <option value="1">Last 30 Days</option>
+                            <option value="2">Last 3 Months</option>
+                            <option value="3">Last Year</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Generate Report</button>
+                </form>
+            </div>
+        </div>
+    </div>
 
-
-
+     <!-- Lista de reportes generados por el usuario -->
+     <div class="container mt-4" id="user_reports_container">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Your Generated Reports</h5>
+                {% if user_reports %}
+                    <table class="table table-striped mt-3">
+                        <thead>
+                            <tr>
+                                <th>Report Date</th>
+                                <th>Time Range</th>
+                                <th>Download</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for report in user_reports %}
+                                <tr>
+                                    <td>{{ report.report_date }}</td>
+                                    <td>
+                                        {% if report.range_type == 1 %}
+                                            Last 30 Days
+                                        {% elif report.range_type == 2 %}
+                                            Last 3 Months
+                                        {% elif report.range_type == 3 %}
+                                            Last Year
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ report.report_pdf.url }}" class="btn btn-success btn-sm" download>Download</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="mt-3">You haven't generated any reports yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
 
     {% load static %}
