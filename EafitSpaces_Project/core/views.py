@@ -450,3 +450,28 @@ def notifications(request):
 
     return render(request, 'notifications.html', {'notifications': user_notifications})
 
+
+# Vista para modificar un espacio
+@login_required
+def modify_space(request, space_id):
+    space = get_object_or_404(Space, space_id=space_id)
+    
+    if request.method == 'POST':
+        form = SpacesForm(request.POST, request.FILES, instance=space)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Space modified successfully!')
+            return redirect('spacesAdmin')  # Ajusta esto según la URL que uses para la página de administración
+    else:
+        form = SpacesForm(instance=space)
+    
+    return render(request, 'modify_space.html', {'form': form, 'space': space})
+
+# Vista para eliminar un espacio
+@login_required
+def delete_space(request, space_id):
+    space = get_object_or_404(Space, space_id=space_id)
+    space.delete()
+    messages.success(request, 'Space deleted successfully!')
+    return redirect('spacesAdmin')  # Redirigir a la vista de administración de espacios
+
