@@ -16,7 +16,9 @@ from django.db.models import Count
 from reportlab.pdfgen import canvas
 import io
 import os
-import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import pyplot as plt
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import Image
 from django.conf import settings
