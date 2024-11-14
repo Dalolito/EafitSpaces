@@ -6,79 +6,86 @@
 
 body {
     background-color: #ffffff;
-    font-family: 'Montserrat', sans-serif;
     margin: 0;
     overflow-x: hidden;
 }
 
-.container_satistics_1 {
-    background-color: #f1f1f1;
-    margin-left: 1%;
-    width: 47%;
-    height: auto;         /* Ajustar la altura automáticamente */
-    margin-top: 2%;
-    padding: 1% 2%;       /* Padding para todos los lados */
-    font-size: 100%;
-    float: left;          /* Alinear a la izquierda para que esté lado a lado con otro contenedor */
-    box-sizing: border-box; /* Asegura que el padding esté dentro del ancho especificado */
-}
-
-#reservationsByHourChart {
-    margin: 0 auto;       /* Centrar el gráfico dentro del contenedor */
-    width: 100%;          /* El ancho ocupa todo el contenedor */
-    max-height: 400px;    /* Limitar la altura máxima a 400px */
-}
-
-.container_satistics_2 {
-    padding: 1% 2%;
-    background-color: #f1f1f1;
-    text-align: center;
-    width: 49%;
-    height: auto;         /* Ajustar la altura automáticamente */
-    margin-top: 2%;
-    float: right;         /* Alinear a la derecha para estar lado a lado con el otro contenedor */
-    box-sizing: border-box;
-}
-
-#reservationsByBuildingChart {
-    margin: 0 auto;       /* Centrar el gráfico dentro del contenedor */
-    width: 100%;          /* El ancho ocupa todo el contenedor */
-    max-height: 400px;    /* Limitar la altura máxima a 400px */
-}
-
-.images {
+/* Contenedor principal para organizar los gráficos en columna */
+.statistics-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 8px;
+    padding: 2% 5%;
+    gap: 20px; /* Espacio entre los gráficos */
 }
 
-.collapse_containr_1 {
-    position: relative;   /* Posicionamiento relativo para mantener el flujo */
-    font-size: 100%;
-    margin-top: 2%;       /* Añadir un margen superior para separar del gráfico anterior */
-    width: 98%;           /* Asegurar que no se desborde del contenedor */
-    box-sizing: border-box;
-    clear: both;          /* Evita que el contenedor de collapse se superponga a los gráficos anteriores */
-}
-
-#collapse_button {
-    font-size: 100%;
-    display: block;       /* Asegura que ocupe toda la línea */
-    width: 100%;          /* El botón ocupa todo el ancho del contenedor */
-    margin-bottom: 1%;    /* Añadir espacio inferior */
-}
-
-#card_text {
+/* Estilo para cada contenedor de gráfico */
+.container_satistics_1, .container_satistics_2 {
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
     background-color: #f1f1f1;
-    padding: 10px;        /* Padding interno para el contenido del colapso */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    margin: 20px auto;
 }
-#generate_report_container{
-    position: absolute;
-    top: 80%;
-    width: 90%;
+
+h5 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
 }
-#user_reports_container{
-    position: absolute;
-    top: 110%;
+
+/* Tamaño y centrado de los gráficos */
+#reservationsByHourChart, #reservationsByBuildingChart {
+    width: 100%;
+    max-height: 300px;
+    margin: 0 auto;
+}
+
+/* Estilo para los contenedores de análisis */
+.collapse_containr_1, .collapse_containr_2 {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.collapse_container button {
+    font-size: 1rem;
+    font-weight: 500;
+    width: 100%;
+    padding: 10px;
+}
+
+.analysis-card {
+    background-color: #f8f9fa;
+    color: #333;
+    padding: 15px;
+    border: none;
+}
+
+/* Sección de reportes */
+.report-section {
+    max-width: 70%;
+    margin: 2% auto;
+}
+
+.report-section .card {
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+}
+
+.table {
+    font-size: 0.9rem;
+}
+
+.table th, .table td {
+    text-align: center;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.03);
 }

@@ -41,6 +41,8 @@ urlpatterns = [
     path('notifications/', Views.notifications, name='notifications'),
     path('spacesModify/<int:space_id>/', Views.modify_space, name='modify_space'),
     path('spacesDelete/<int:space_id>/', Views.delete_space, name='delete_space'),
+    path('analyze-data/', Views.analyze_data, name='analyze_data'),
+    path('analyze-block-data/', Views.analyze_block_data, name='analyze_block_data'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

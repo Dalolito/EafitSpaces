@@ -727,3 +727,80 @@ def generate_report(request):
 
     # Si no es POST, redirigir a la página de estadísticas
     return redirect('statisticsAdmin')
+
+@login_required
+def analyze_data(request):
+    # Calcular la fecha de hace 6 meses desde hoy
+    six_months_ago = timezone.now() - timedelta(days=180)
+    
+    # Filtrar las reservas de los últimos 6 meses
+    reservations = Reservation.objects.filter(reservation_date__gte=six_months_ago)
+
+    # Contadores de las horas de inicio y fin
+    start_times_count = Counter()
+    end_times_count = Counter()
+
+    # Contar las reservas para cada hora de inicio y fin
+    for reservation in reservations:
+        start_hour = reservation.start_time.hour
+        end_hour = reservation.end_time.hour
+        start_times_count[start_hour] += 1
+        end_times_count[end_hour] += 1
+
+    # Obtener la hora de inicio y fin con más reservas
+    most_common_start_hour = max(start_times_count, key=start_times_count.get)
+    most_common_end_hour = max(end_times_count, key=end_times_count.get)
+
+    # Convertir horas al formato 12 horas con AM/PM
+    def format_hour(hour):
+        if hour == 0:
+            return "12 AM"
+        elif hour < 12:
+            return f"{hour} AM"
+        elif hour == 12:
+            return "12 PM"
+        else:
+            return f"{hour - 12} PM"
+
+    # Crear el mensaje con el formato de 12 horas
+    response_data = {
+        'message': (
+            f"The hour with the most reservations starts at {format_hour(most_common_start_hour)} "
+            f"with {start_times_count[most_common_start_hour]} reservations, "
+            f"and the most common end time is at {format_hour(most_common_end_hour)} "
+            f"with {end_times_count[most_common_end_hour]} reservations."
+        )
+    }
+
+    return JsonResponse(response_data)
+
+@login_required
+def analyze_block_data(request):
+    # Calcular la fecha de hace 6 meses desde hoy
+    six_months_ago = timezone.now() - timedelta(days=180)
+    
+    # Filtrar las reservas de los últimos 6 meses
+    reservations = Reservation.objects.filter(reservation_date__gte=six_months_ago)
+
+    # Contador para las reservas por bloque
+    block_counts = Counter()
+    for reservation in reservations:
+        block_number = reservation.space_id.building_number
+        block_counts[block_number] += 1
+
+    # Obtener el bloque con más reservas
+    if block_counts:
+        most_common_block = max(block_counts, key=block_counts.get)
+        most_common_block_count = block_counts[most_common_block]
+        response_data = {
+            'message': (
+                f"The block with the most reservations is Block {most_common_block} "
+                f"with {most_common_block_count} reservations."
+            )
+        }
+    else:
+        response_data = {
+            'message': "No reservation data available for the selected period."
+        }
+
+    return JsonResponse(response_data)
