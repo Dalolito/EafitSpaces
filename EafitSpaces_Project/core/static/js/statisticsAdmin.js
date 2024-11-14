@@ -1,75 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Verificar que el canvas esté disponible antes de intentar crear el gráfico
+    // Gráfico de reservas por hora (container_satistics_1)
     const ctx = document.getElementById('reservationsByHourChart').getContext('2d');
-
-    // Los datos de las horas y los conteos serán inyectados desde el HTML con JSON.parse
     const hours = JSON.parse(document.getElementById('chart-hours').textContent);
     const counts = JSON.parse(document.getElementById('chart-counts').textContent);
-
-    // Crear la gráfica usando Chart.js
     const reservationsByHourChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: hours, // Lista de horas (6-22)
+            labels: hours,
             datasets: [{
                 label: 'Number of Reservations',
-                data: counts, // Número de reservas por cada hora
-                backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive:true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Hour of the Day'
-                    },
-                    ticks: {
-                        callback: function(value) {
-                            // Convertir los valores de las horas a formato 12 horas con AM/PM
-                            const hour = parseInt(this.getLabelForValue(value));
-                            if (hour > 12) {
-                                return (hour - 12) + ' PM';
-                            } else if (hour === 12) {
-                                return '12 PM';
-                            } else if (hour === 0) {
-                                return '12 AM';
-                            } else {
-                                return hour + ' AM';
-                            }
-                        }
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Number of Reservations'
-                    }
-                }
-            }
-        }
-    });
-
-
-    const ctx2 = document.getElementById('reservationsByBuildingChart').getContext('2d');
-
-    // Obtener los datos de los elementos JSON
-    const blocks = JSON.parse(document.getElementById('chart-blocks').textContent);
-    const counts2 = JSON.parse(document.getElementById('chart2-counts').textContent);
-
-    // Crear la gráfica de barras usando Chart.js
-    const reservationsByBuildingChart = new Chart(ctx2, {
-        type: 'bar',
-        data: {
-            labels: blocks, // Números de bloques (e.g., "38", "39", ...)
-            datasets: [{
-                label: 'Number of Reservations',
-                data: counts2, // Cantidad de reservas para cada bloque
+                data: counts,
                 backgroundColor: 'rgba(54, 162, 235, 0.6)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
@@ -79,20 +19,77 @@ document.addEventListener('DOMContentLoaded', function() {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Number of Reservations'
-                    }
+                x: { 
+                    title: { display: true, text: 'Hour of the Day' }
                 },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Building Numbers'
-                    }
+                y: { 
+                    beginAtZero: true, 
+                    title: { display: true, text: 'Number of Reservations' }
                 }
             }
         }
     });
+
+    // Gráfico de reservas por bloque (container_satistics_2)
+    const ctx2 = document.getElementById('reservationsByBuildingChart').getContext('2d');
+    const blocks = JSON.parse(document.getElementById('chart-blocks').textContent);
+    const counts2 = JSON.parse(document.getElementById('chart2-counts').textContent);
+    const reservationsByBuildingChart = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: blocks,
+            datasets: [{
+                label: 'Number of Reservations',
+                data: counts2,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: { 
+                    title: { display: true, text: 'Building Numbers' }
+                },
+                y: { 
+                    beginAtZero: true, 
+                    title: { display: true, text: 'Number of Reservations' }
+                }
+            }
+        }
+    });
+
+    // Función para analizar datos por hora
+    window.analyzeData = function() {
+        const analysisContainer = document.getElementById('collapseExample1');
+        
+        fetch('/analyze-data/')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('card_text_1').textContent = data.message;
+                new bootstrap.Collapse(analysisContainer, { toggle: true });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('card_text_1').textContent = "An error occurred while analyzing data.";
+            });
+    }
+
+    // Función para analizar datos por bloque
+    window.analyzeBlockData = function() {
+        const analysisContainer2 = document.getElementById('collapseExample2');
+        
+        fetch('/analyze-block-data/')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('card_text_2').textContent = data.message;
+                new bootstrap.Collapse(analysisContainer2, { toggle: true });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('card_text_2').textContent = "An error occurred while analyzing block data.";
+            });
+    }
 });

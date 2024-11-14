@@ -11,31 +11,43 @@
 </head>
 
 <body>
-    <div class ="container_satistics_1">
-        <h5 style="text-align: center;">Number of Reservations by Hour (Last 6 Months)</h5>
-        <canvas id="reservationsByHourChart" class ="reservations_by_hours"></canvas>
-
+    <br>
+    <div class="container_satistics_1">
+    <h5 style="text-align: center;">Number of Reservations by Hour (Last 6 Months)</h5>
+    <canvas id="reservationsByHourChart" class="reservations_by_hours"></canvas>
 
         <div class="collapse_containr_1">
-            <p class="d-inline-flex gap-1" id="collapse_button">
-                <a class="btn btn-primary w-100 w-md-auto text-center responsive-text" id = "collapse_button" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <p class="d-inline-flex gap-1" id="collapse_button_1">
+                <button class="btn btn-primary w-100 w-md-auto text-center responsive-text" onclick="analyzeData()">
                     Analyze data
-                </a>
+                </button>
             </p>
-            <div class="collapse" id="collapseExample">
-                <div class="card card-body" id="card_text">
+            <div class="collapse" id="collapseExample1">
+                <div class="card card-body" id="card_text_1">
                     Data analysis through artificial intelligence
                 </div>
             </div>
         </div>
-
-
     </div>
 
-    <div class ="container_satistics_2">
+    <div class="container_satistics_2">
         <h5>Number of Reservations by Block (Last 6 Months)</h5>
-        <canvas id="reservationsByBuildingChart" class ="reservationsByBuildingChart"></canvas>
+        <canvas id="reservationsByBuildingChart" class="reservationsByBuildingChart"></canvas>
+
+        <div class="collapse_containr_2"> 
+            <p class="d-inline-flex gap-1" id="collapse_button_2">
+                <button class="btn btn-primary w-100 w-md-auto text-center responsive-text" onclick="analyzeBlockData()">
+                    Analyze data
+                </button>
+            </p>
+            <div class="collapse" id="collapseExample2">
+                <div class="card card-body" id="card_text_2">
+                    Data analysis through artificial intelligence
+                </div>
+            </div>
+        </div>
     </div>
+
     
         <!-- Formulario para seleccionar el rango y generar reporte -->
     <div class="container mt-4" id = "generate_report_container">
@@ -59,7 +71,7 @@
     </div>
 
      <!-- Lista de reportes generados por el usuario -->
-     <div class="container mt-4" id="user_reports_container">
+    <div class="container mt-4" id="user_reports_container">
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Your Generated Reports</h5>
@@ -96,8 +108,10 @@
                     <p class="mt-3">You haven't generated any reports yet.</p>
                 {% endif %}
             </div>
+            <br>
         </div>
     </div>
+    <br>
 
 
     {% load static %}
