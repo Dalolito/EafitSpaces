@@ -20,7 +20,7 @@
         <div class="dropdown">
             <button class="dropbtn">Filter by:</button>
             <div class="dropdown-content">
-                <a href="{% url 'home' %}">All</a>
+                <a href="{% url 'spacesAdmin' %}">All</a>
                 {% for space_type in space_types %}
                     <a href="?space_type={{ space_type.type_id }}">{{ space_type.type_name }}</a>
                 {% endfor %}
@@ -60,12 +60,20 @@
         <div class="popup_content">
             <div class="form_section">
                 <div class="reservation-title">Reservation Form</div>
-                <form id="reservation_form" method="post">
+                <form id="reservation_form" method="post" onsubmit="submitForm(event)">
                     <input type="hidden" name="data" value="reservation">
                     {% csrf_token %}
-                    {{ form.as_p }}
+                    <label for="reservation_date" class="input_title">Reservation Date:</label>
+                    {{ form.reservation_date }}
+                    <label for="start_time" class="input_title">Start time:</label>
+                    {{ form.start_time }}
+                    <label for="end_time" class="input_title">End time:</label>
+                    {{ form.end_time }}
+                    {{ form.space_id }}
+                    {{ form.user_id }}
+                    <input type="hidden" name="space_reserve_id" value="{{ peticion_data.space_id }}">
                     <div class="buttons">
-                        <button type="submit" class="btn_submit" onclick="submitForm()">Accept</button>
+                        <button type="submit" class="btn_submit">Accept</button>
                     </div>
                 </form>
                 <button type="button" class="btn_close" onclick="closeForm()">Back</button>
@@ -73,7 +81,16 @@
             <div class="details_section" id="details_section">
                 <img src="{{ peticion_data.image.url }}" class="image_reservation" alt="Imagen del espacio">
                 <div class="information">
-                    {{ peticion_data.available_resources }}
+                    <b><p>Resources:</p></b>
+                    {% if available_resources %}
+                        <ul>
+                            {% for resource in available_resources %}
+                                <li>{{ resource }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No resources available.</p>
+                    {% endif %}
                 </div>
                 <div id="confirmation_message" style="display: none;">
                     <p>Your reservation has been confirmed!</p>
@@ -81,16 +98,16 @@
                 <img id="image_confirmation" src="{% static 'img/image_confirmation.png' %}" class="image_confirmation" alt="Imagen de confirmacion" style="display: none;">
             </div>
         </div>
-    </div>   
-    
+    </div>
+
     <!-- formulario emergente cuando se hace click en agregar espacios -->
     <div class="add_space_form" id="add_space_form" style="display:none;">
-        <form id="reservation_form" method="post" enctype="multipart/form-data">
+        <form id="add_space_form_data" method="post" enctype="multipart/form-data">
             <input type="hidden" name="data" value="spaces">
 
             <!-- Div para el campo Image -->
             <img id="image_preview" src="{% static 'img/image_placeholder_icon.png' %}" alt="Preview" class="img-fluid">
-            <div class = "bar">_____</div>
+            <div class="bar">_____</div>
 
             {% csrf_token %}
             {{ form.as_p }}
@@ -98,7 +115,7 @@
             <!-- Botones dentro del formulario -->
             <div class="form-buttons">
                 <button type="submit" class="btn btn-success" id="submit-btn">Enviar</button>
-                <button type="button" class="btn btn-danger" id="close-btn">Cerrar</button>
+                <button type="button" class="btn btn-danger" id="close-btn" onclick="closeAddSpaceForm()">Cerrar</button>
             </div>
         </form>
     </div>
@@ -106,7 +123,7 @@
     <!-- boton para añadir espacios -->
     <form action="" method="get">
         <input type="hidden" name="type_form" value="add_space_form">
-        <button type="button" id="add-btn" class="btn btn-primary" style="position:fixed; bottom:20px; right:20px;">+</button>
+        <button type="button" id="add-btn" class="btn btn-primary" onclick="openAddSpaceForm()">+</button>
     </form>
 
     <!-- Mensaje de éxito al enviar el formulario -->
@@ -121,6 +138,92 @@
         {% endfor %}
     </div>
     {% endif %}
+
+    <script>
+        // Copia el script del home.html para manejar las horas disponibles y la validación de formularios
+        document.addEventListener("DOMContentLoaded", function () {
+            const reservationDateInput = document.getElementById('id_reservation_date');
+            const startTimeSelect = document.getElementById('id_start_time');
+            const endTimeSelect = document.getElementById('id_end_time');
+            const spaceId = document.querySelector('input[name="space_reserve_id"]').value;
+
+            let availableHours = [];
+
+            startTimeSelect.disabled = true;
+            endTimeSelect.disabled = true;
+            startTimeSelect.style.backgroundColor = '#ccd1d1';
+            endTimeSelect.style.backgroundColor = '#ccd1d1';
+
+            reservationDateInput.addEventListener('change', function () {
+                const selectedDate = reservationDateInput.value;
+
+                endTimeSelect.disabled = true;
+                endTimeSelect.style.backgroundColor = '#ccd1d1';
+                endTimeSelect.innerHTML = '';
+
+                if (selectedDate) {
+                    fetch(`/get-available-hours/?space_id=${spaceId}&reservation_date=${selectedDate}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            availableHours = data.available_hours || [];
+
+                            startTimeSelect.innerHTML = '';
+
+                            if (availableHours.length > 0) {
+                                availableHours.forEach(hour => {
+                                    const option = document.createElement('option');
+                                    option.value = hour[0];
+                                    option.text = hour[1];
+                                    startTimeSelect.add(option);
+                                });
+
+                                startTimeSelect.disabled = false;
+                                startTimeSelect.style.backgroundColor = 'white';
+                            } else {
+                                startTimeSelect.disabled = true;
+                                startTimeSelect.style.backgroundColor = '#ccd1d1';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching available hours:', error);
+                        });
+                } else {
+                    startTimeSelect.disabled = true;
+                    startTimeSelect.style.backgroundColor = '#ccd1d1';
+                }
+            });
+
+            startTimeSelect.addEventListener('change', function () {
+                const selectedStartTime = startTimeSelect.value;
+                endTimeSelect.innerHTML = '';
+
+                if (selectedStartTime && availableHours.length > 0) {
+                    endTimeSelect.style.backgroundColor = 'white';
+                    const [startHour, startMinute] = selectedStartTime.split(':').map(Number);
+                    const startTimeInMinutes = startHour * 60 + startMinute;
+
+                    availableHours.forEach(hour => {
+                        const [endHour, endMinute] = hour[0].split(':').map(Number);
+                        const endTimeInMinutes = endHour * 60 + endMinute;
+
+                        const difference = endTimeInMinutes - startTimeInMinutes;
+
+                        if (difference >= 60 && difference <= 180) {
+                            const option = document.createElement('option');
+                            option.value = hour[0];
+                            option.text = hour[1];
+                            endTimeSelect.add(option);
+                        }
+                    });
+
+                    endTimeSelect.disabled = false;
+                } else {
+                    endTimeSelect.disabled = true;
+                    endTimeSelect.style.backgroundColor = '#ccd1d1';
+                }
+            });
+        });
+    </script>
 
     {% load static %}
     <script src="{% static 'js/spacesAdminForm.js' %}"></script>

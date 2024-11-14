@@ -256,11 +256,72 @@ def spacesAdmin(request):
     # Verificar si el usuario está autenticado
     user = request.user
     is_superuser = user.is_superuser
+    available_hours = []
+    peticion_data = None
+    available_resources = None
+
+    if selected_space_id:
+        # Obtener todas las horas reservadas para el espacio seleccionado
+        peticion_data = Space.objects.get(space_id=selected_space_id)
+        reservas = Reservation.objects.filter(space_id=selected_space_id)
+        resources = SpaceXResource.objects.filter(space_id=selected_space_id)
+        available_resources = [
+            f"{resource.resource_id.name} (Cantidad: {resource.quantity})"
+            for resource in resources
+        ]
+        # Todas las horas posibles
+        all_times = [
+            ('06:00', '06:00 AM'), ('06:30', '06:30 AM'), 
+            ('07:00', '07:00 AM'), ('07:30', '07:30 AM'), 
+            ('08:00', '08:00 AM'), ('08:30', '08:30 AM'),
+            ('09:00', '09:00 AM'), ('09:30', '09:30 AM'),
+            ('10:00', '10:00 AM'), ('10:30', '10:30 AM'),
+            ('11:00', '11:00 AM'), ('11:30', '11:30 AM'),
+            ('12:00', '12:00 PM'), ('12:30', '12:30 PM'),
+            ('13:00', '01:00 PM'), ('13:30', '01:30 PM'),
+            ('14:00', '02:00 PM'), ('14:30', '02:30 PM'),
+            ('15:00', '03:00 PM'), ('15:30', '03:30 PM'),
+            ('16:00', '04:00 PM'), ('16:30', '04:30 PM'),
+            ('17:00', '05:00 PM'), ('17:30', '05:30 PM'),
+            ('18:00', '06:00 PM'), ('18:30', '06:30 PM'),
+            ('19:00', '07:00 PM'), ('19:30', '07:30 PM'),
+            ('20:00', '08:00 PM'), ('20:30', '08:30 PM'),
+            ('21:00', '09:00 PM'), ('21:30', '09:30 PM'),
+            ('22:00', '10:00 PM')
+        ]
+
+        # Convertir las horas posibles a objetos datetime para facilitar comparaciones
+        from datetime import datetime
+
+        # Filtrar las horas disponibles para que no estén en el rango de ninguna reserva
+        available_hours = []
+
+        for hour, display in all_times:
+            # Convertir la hora a un objeto datetime para comparar
+            hour_time = datetime.strptime(hour, '%H:%M').time()
+            is_available = True
+
+            # Verificar si la hora cae dentro de algún rango de reserva
+            for reserva in reservas:
+                start_time = reserva.start_time
+                end_time = reserva.end_time
+
+                # Si la hora está entre la hora de inicio y fin de la reserva, marcarla como no disponible
+                if start_time <= hour_time < end_time:
+                    is_available = False
+                    break
+
+            # Si la hora no está dentro de ningún rango reservado, agregarla a las horas disponibles
+            if is_available:
+                available_hours.append((hour, display))
+
+    # Convertir available_hours a JSON
+    available_hours_json = json.dumps(available_hours)
 
     if request.method == 'POST':
         data = request.POST.get('data')
         if data == "reservation":
-            form = ReservationForm(request.POST)
+            form = ReservationForm(space_id=selected_space_id, data=request.POST)
             if form.is_valid():
                 form.save()
                 messages.success(request, 'Reservation added successfully!')
@@ -281,7 +342,7 @@ def spacesAdmin(request):
                 print(form.errors)
     else:
         if type_form == "reservation_form":
-            form = ReservationForm(initial={
+            form = ReservationForm(space_id=selected_space_id, initial={
                 'space_id': selected_space_id,
                 'user_id': user.user_id
             })
@@ -292,12 +353,7 @@ def spacesAdmin(request):
             })
 
     # Obtener datos del espacio seleccionado
-    peticion_data = None
-    if selected_space_id:
-        try:
-            peticion_data = Space.objects.get(space_id=selected_space_id)
-        except Space.DoesNotExist:
-            peticion_data = None
+    peticion_data = Space.objects.get(space_id=selected_space_id) if selected_space_id else None
 
     return render(request, 'spacesAdmin.html', {
         'spaces': spaces,
@@ -306,10 +362,10 @@ def spacesAdmin(request):
         'space_id': selected_space_id,
         'form': form,
         'peticion_data': peticion_data,
+        'available_hours': available_hours_json,  # Pasar las horas disponibles como JSON al template
+        'available_resources': available_resources,
         'errors': form.errors  
     })
-
-
 
 @login_required
 def statisticsAdmin(request):
