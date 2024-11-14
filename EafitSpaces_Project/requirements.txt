@@ -3,3 +3,4 @@ pillow
 numpy
 pandas
 matplotlib
+reportlab

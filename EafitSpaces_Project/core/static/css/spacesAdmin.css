@@ -45,7 +45,7 @@ body {
     position: absolute;
     background-color: #ffffff;
     min-width: 160px;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
     z-index: 1;
     border-radius: 4px;
 }
@@ -124,11 +124,11 @@ body {
 }
 
 .reservation-title {
-    font-size: 30px;
+    font-size: 30px; /* Ajusta el tamaño según tu necesidad */
     color: #333;
     font-weight: bold;
     margin-bottom: 30px;
-    text-align: center;
+    text-align: center; /* O cualquier otra alineación que desees */
 }
 
 .popup_form {
@@ -142,7 +142,7 @@ body {
     width: 80%;
     max-width: 1000px;
     padding: 20px;
-    z-index: 1001;
+    z-index: 1001; /* Encima del overlay */
     display: none;
 }
 
@@ -150,76 +150,23 @@ body {
     display: flex;
 }
 
-.form_section {
+.form_section, .details_section {
     flex: 1;
     margin-right: 20px;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
 }
 
-.form_section .reservation-title {
-    font-size: 28px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.form_section form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.form_section input,
-.form_section select,
-.form_section textarea {
-    width: 100%;
+.btn_submit, .btn_close {
+    background-color: #007bff;
+    color: white;
     padding: 10px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-
-.btn_submit {
-    display: block;
-    background-color: #007bff;
-    color: white;
     border: none;
-    padding: 10px 16px;
-    font-size: 16px;
     border-radius: 4px;
     cursor: pointer;
+    margin: 5px;
 }
 
-.btn_close {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    text-align: center;
-    font-size: 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: -9.5%;
-    margin-left: 63%;
-}
-
-.form_section .btn_submit:hover,
-.form_section .btn_close:hover {
-    opacity: 0.9;
-}
-
-.details_section {
-    flex: 1;
-    margin-left: 20px;
+.btn_submit:hover, .btn_close:hover {
+    background-color: #0056b3;
 }
 
 .image_reservation, .image_confirmation {
@@ -235,9 +182,9 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5); /* Oscurece el fondo */
     z-index: 1000;
-    display: none;
+    display: none; /* Oculto por defecto */
 }
 
 #confirmation_message p {
@@ -254,27 +201,29 @@ body {
 }
 
 #add-btn {
-    position: fixed;
-    bottom: 4%;
-    right: 2%;
-    z-index: 1000;
-    width: 5.5vw;
-    height: 5.5vw;
-    border-radius: 50%;
-    background-color: #007bff;
-    color: white;
-    font-size: 3vw;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    border: none;
+    position: fixed;         /* Fija el botón en la misma posición en la pantalla */
+    bottom: 4%;             /* Asegura que el botón esté a un 10% del borde inferior de la ventana */
+    right: 2%;               /* Asegura que el botón esté a un 3% del borde derecho de la ventana */
+    z-index: 1000;           /* Asegura que el botón esté por encima de otros elementos */
+  
+    width: 5.5vw;             /* Define el ancho del botón como un porcentaje del ancho de la ventana */
+    height: 5.5vw;            /* Define la altura del botón igual al ancho para mantener la forma circular */
+    border-radius: 50%;     /* Hace que el botón sea un círculo */
+    background-color: #007bff; /* Color de fondo del botón (puedes cambiarlo) */
+    color: white;            /* Color del texto */
+    font-size: 3vw;          /* Ajusta el tamaño del texto en relación con el tamaño del botón */
+    font-weight: bold;       /* Hace que el texto esté en negrilla */
+    display: flex;           /* Usa Flexbox para centrar el texto dentro del botón */
+    align-items: center;     /* Alinea verticalmente el texto */
+    justify-content: center; /* Alinea horizontalmente el texto */
+    text-align: center;      /* Alinea el texto al centro */
+    border: none;            /* Elimina el borde por defecto del botón */
 }
 
+/* Formulario para añadir spacios */
 .add_space_form {
     position: fixed;
-    top: 15%;
+    top: 10%;
     left: 20%;
     transform: translate(-50%, -50%);
     background-color: #ffffff;
@@ -283,7 +232,7 @@ body {
     width: 80%;
     max-width: 1000px;
     padding: 20px;
-    z-index: 1001;
+    z-index: 1001; /* Encima del overlay */
     display: none;
 }
 
@@ -291,12 +240,48 @@ body {
     transform: scale(1);
 }
 
-.form-buttons {
+/* Botones dentro del formulario */
+.form-buttons {/* Contenedor del campo de subida de imagen */
+.image-upload {
+    width: 150px;  /* Tamaño del cuadrado */
+    height: 150px;
+    position: relative;
+    display: inline-block;
+}
+
+.image-upload label {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: #f3f3f3;  /* Color de fondo */
+    border: 2px dashed #cccccc;  /* Borde estilo dashed */
+    border-radius: 10px;  /* Esquinas redondeadas */
+    cursor: pointer;
+    text-align: center;
+    position: relative;
+}
+
+.image-upload label img {
+    max-width: 50%;  /* Tamaño del ícono */
+    max-height: 50%;
+    margin-top: 25px;  /* Centramos el ícono verticalmente */
+}
+
+.image-upload input[type="file"] {
+    display: none;  /* Ocultamos el verdadero input de archivo */
+}
+
+/* Hover sobre el área de subida de imagen */
+.image-upload label:hover {
+    background-color: #e1e1e1;
+    border-color: #007bff;  /* Cambia el color del borde al pasar el mouse */
+}
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
 }
 
+/* Mensaje de éxito */
 .success-message {
     position: fixed;
     top: 10px;
@@ -309,20 +294,26 @@ body {
     z-index: 1000;
 }
 
-.bar {
+.bar{
     position: fixed;
     left: 55.5%;
     top: 8%;
-    font-weight: bold;
+    font-weight: bold;  
 }
 
+
+
+
+
 #image_preview {
-    width: 200px;
-    height: 200px;
+    width: 200px; /* O el tamaño que desees */
+    height: 200px; /* O el tamaño que desees */
     border: 1px dashed #ccc;
-    display: block;
+    display: block; /* Asegura que esté visible */
     margin-top: 10px;
 }
+
+
 
 .image-upload {
     display: flex;
@@ -346,27 +337,89 @@ body {
     display: none;
 }
 
-/* Botones personalizados */
+#capacity_input{
+    position: fixed;
+    width: 30%;
+    left: 25%;
+    top: 25%;
+}
+label[for="capacity_input"] {
+    position: fixed;
+    left: 26.3%;
+    top: 20%;
+
+}
+#building_input{
+    position: fixed;
+    width: 30%;
+    left: 25%;
+    top: 8%;
+}
+label[for="building_input"] {
+    position: fixed;
+    left: 26.3%;
+    top: 3%;
+
+}
+#room_input{
+    position: fixed;
+    width: 30%;
+    left: 60%;
+    top: 8%;
+}
+label[for="room_input"] {
+    position: fixed;
+    left: 62.3%;
+    top: 3%;
+
+}
+.bar_building_room{
+    position: fixed;
+    left: 56%;
+    top: 8%;
+    font-weight: bold;
+    
+}
+#type_input{
+    position: fixed;
+    width: 30%;
+    left: 60%;;
+    top: 25%;
+}
+label[for="type_input"] {
+
+    position: fixed;
+    left: 62.3%;
+    top: 20%;
+}
+#image_input2{
+opacity: 0;
+   
+}
+
+/* Para el botón de modificar */
 .btn-custom-modify {
-    background-color: #4CAF50;
-    color: white;
-    border: 2px solid #388E3C;
-    border-radius: 5px;
+    background-color: #4CAF50; /* color de fondo */
+    color: white; /* color del texto */
+    border: 2px solid #388E3C; /* color y grosor del borde */
+    border-radius: 5px; /* bordes redondeados */
 }
 
+/* Para el botón de eliminar */
 .btn-custom-delete {
-    background-color: #f44336;
-    color: white;
-    border: 2px solid #d32f2f;
-    border-radius: 5px;
+    background-color: #f44336; /* color de fondo */
+    color: white; /* color del texto */
+    border: 2px solid #d32f2f; /* color y grosor del borde */
+    border-radius: 5px; /* bordes redondeados */
 }
 
+/* Cambios al pasar el cursor */
 .btn-custom-modify:hover {
-    background-color: #45a049;
-    border-color: #2e7d32;
+    background-color: #45a049; /* tono más oscuro para el hover */
+    border-color: #2e7d32; /* cambiar color del borde al pasar el cursor */
 }
 
 .btn-custom-delete:hover {
-    background-color: #d32f2f;
-    border-color: #c62828;
+    background-color: #d32f2f; /* tono más oscuro para el hover */
+    border-color: #c62828; /* cambiar color del borde al pasar el cursor */
 }
